@@ -1,8 +1,9 @@
 import express from 'express';
 import authRoute from './auth.route';
 import userRoute from './user.route';
+import quizRoute from './quiz.route';
 import docsRoute from './docs.route';
-import config from '../../config/config';
+import config from 'config/env';
 
 const router = express.Router();
 
@@ -14,6 +15,10 @@ const defaultRoutes = [
   {
     path: '/users',
     route: userRoute
+  },
+  {
+    path: '/quiz',
+    route: quizRoute
   }
 ];
 

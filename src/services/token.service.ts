@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 import moment, { Moment } from 'moment';
 import httpStatus from 'http-status';
-import config from '../config/config';
+import config from 'config/env';
 import userService from './user.service';
-import ApiError from '../utils/ApiError';
 import { Token, TokenType } from '@prisma/client';
-import prisma from '../prisma';
-import { AuthTokensResponse } from '../types/response';
+import prisma from 'prisma';
+import { AuthTokensResponse } from 'types/response';
+import ApiError from 'utils/ApiError';
 
 /**
  * Generate token
@@ -113,8 +113,8 @@ const generateResetPasswordToken = async (email: string): Promise<string> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'No users found with this email');
   }
   const expires = moment().add(config.jwt.resetPasswordExpirationMinutes, 'minutes');
-  const resetPasswordToken = generateToken(user.id as number, expires, TokenType.RESET_PASSWORD);
-  await saveToken(resetPasswordToken, user.id as number, expires, TokenType.RESET_PASSWORD);
+  const resetPasswordToken = generateToken(user.id, expires, TokenType.RESET_PASSWORD);
+  await saveToken(resetPasswordToken, user.id, expires, TokenType.RESET_PASSWORD);
   return resetPasswordToken;
 };
 

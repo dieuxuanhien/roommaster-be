@@ -1,8 +1,8 @@
 import { User, Role, Prisma } from '@prisma/client';
 import httpStatus from 'http-status';
-import prisma from '../prisma';
-import ApiError from '../utils/ApiError';
-import { encryptPassword } from '../utils/encryption';
+import prisma from 'prisma';
+import ApiError from 'utils/ApiError';
+import { encryptPassword } from 'utils/encryption';
 
 /**
  * Create a user
@@ -72,7 +72,7 @@ const queryUsers = async <Key extends keyof User>(
 
 /**
  * Get user by id
- * @param {ObjectId} id
+ * @param {number} id
  * @param {Array<Key>} keys
  * @returns {Promise<Pick<User, Key> | null>}
  */
@@ -122,7 +122,7 @@ const getUserByEmail = async <Key extends keyof User>(
 
 /**
  * Update user by id
- * @param {ObjectId} userId
+ * @param {number} userId
  * @param {Object} updateBody
  * @returns {Promise<User>}
  */
@@ -148,7 +148,7 @@ const updateUserById = async <Key extends keyof User>(
 
 /**
  * Delete user by id
- * @param {ObjectId} userId
+ * @param {number} userId
  * @returns {Promise<User>}
  */
 const deleteUserById = async (userId: number): Promise<User> => {

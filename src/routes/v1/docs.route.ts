@@ -1,7 +1,7 @@
 import express from 'express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDefinition from '../../docs/swaggerDef';
+import swaggerDefinition from 'docs/swaggerDef';
 
 const router = express.Router();
 
@@ -17,5 +17,10 @@ router.get(
     explorer: true
   })
 );
+
+router.get('/json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(specs);
+});
 
 export default router;

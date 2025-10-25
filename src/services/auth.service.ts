@@ -1,12 +1,12 @@
 import httpStatus from 'http-status';
 import tokenService from './token.service';
 import userService from './user.service';
-import ApiError from '../utils/ApiError';
 import { TokenType, User } from '@prisma/client';
-import prisma from '../prisma';
-import { encryptPassword, isPasswordMatch } from '../utils/encryption';
-import { AuthTokensResponse } from '../types/response';
-import exclude from '../utils/exclude';
+import prisma from 'prisma';
+import { encryptPassword, isPasswordMatch } from 'utils/encryption';
+import { AuthTokensResponse } from 'types/response';
+import exclude from 'utils/exclude';
+import ApiError from 'utils/ApiError';
 
 /**
  * Login with username and password
@@ -18,16 +18,7 @@ const loginUserWithEmailAndPassword = async (
   email: string,
   password: string
 ): Promise<Omit<User, 'password'>> => {
-  const user = await userService.getUserByEmail(email, [
-    'id',
-    'email',
-    'name',
-    'password',
-    'role',
-    'isEmailVerified',
-    'createdAt',
-    'updatedAt'
-  ]);
+  const user = await userService.getUserByEmail(email);
   if (!user || !(await isPasswordMatch(password, user.password as string))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }

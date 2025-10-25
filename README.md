@@ -105,6 +105,9 @@ Database:
 # push changes to db
 yarn db:push
 
+# seed the database with test data
+npx prisma db seed
+
 # start prisma studio
 yarn db:studio
 ```
@@ -211,6 +214,31 @@ List of available routes:
 `GET /v1/users/:userId` - get user\
 `PATCH /v1/users/:userId` - update user\
 `DELETE /v1/users/:userId` - delete user
+
+**Quiz routes**:\
+`GET /v1/quiz` - get all quizzes with pagination\
+`GET /v1/quiz/:quizId` - get quiz by ID with questions\
+`GET /v1/quiz/code/:code` - get quiz by code with questions\
+`POST /v1/quiz/submit` - submit quiz answers (auth required)\
+`GET /v1/quiz/results/history` - get user's quiz history with pagination (auth required)\
+`GET /v1/quiz/results/:quizId` - get user's result for a specific quiz (auth required)
+
+## Database Seeding
+
+The project includes seed scripts to populate the database with test data. To seed the database:
+
+```bash
+npx prisma db seed
+```
+
+This will create:
+- **Test Users:**
+  - Normal User: `user@example.com` / `password123`
+  - Admin User: `admin@example.com` / `password123`
+- **Quiz Data:**
+  - Beck Depression Inventory (BDI) with 21 questions
+
+For more details about seeded data, see [prisma/seeds/README.md](prisma/seeds/README.md).
 
 ## Error Handling
 

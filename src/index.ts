@@ -1,7 +1,8 @@
+import 'module-alias/register';
 import { Server } from 'http';
 import app from './app';
 import prisma from './prisma';
-import config from './config/config';
+import config from './config/env';
 import logger from './config/logger';
 
 let server: Server;
