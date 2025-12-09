@@ -1,36 +1,51 @@
+import prisma from '../../src/prisma';
+import { seedSystemFunctions, seedUserGroups } from './permission';
 import { seedEmployees } from './employee';
-import { seedRoomTypes, seedRooms } from './room';
 import { seedCustomerTiers, seedCustomers } from './customer';
-import { seedServices, seedPaymentMethods } from './service';
-import { seedSystemFunctions, seedUserGroups, assignUserGroupsToEmployees } from './permission';
+import { seedRoomTypes, seedRooms } from './room';
+import { seedPaymentMethods, seedServices } from './service';
 
-const main = async () => {
+async function main() {
   console.log('🌱 Starting database seeding...\n');
 
-  // Seed permissions first (SystemFunctions and UserGroups)
-  await seedSystemFunctions();
-  await seedUserGroups();
+  try {
+    // 1. Seed System Functions (Permissions) - Required for UserGroups
+    await seedSystemFunctions();
 
-  // Seed employees (for authentication)
-  await seedEmployees();
+    // 2. Seed UserGroups (ADMIN, RECEPTIONIST, CASHIER, HOUSEKEEPER, WAITER) with permissions
+    await seedUserGroups();
 
-  // Assign user groups to employees based on their role
-  await assignUserGroupsToEmployees();
+    // 3. Seed Employees - Requires UserGroups to be created first
+    await seedEmployees();
 
-  // Seed room configuration
-  await seedRoomTypes();
-  await seedRooms();
+    // 4. Seed Customer Tiers - Required for Customers
+    await seedCustomerTiers();
 
-  // Seed customer configuration
-  await seedCustomerTiers();
-  await seedCustomers();
+    // 5. Seed Customers
+    await seedCustomers();
 
-  // Seed services and payment methods
-  await seedServices();
-  await seedPaymentMethods();
+    // 6. Seed Room Types - Required for Rooms
+    await seedRoomTypes();
 
-  console.log('\n✅ Database seeding completed successfully!');
-  process.exit(0);
-};
+    // 7. Seed Rooms
+    await seedRooms();
 
-main();
+    // 8. Seed Payment Methods
+    await seedPaymentMethods();
+
+    // 9. Seed Services
+    await seedServices();
+
+    console.log('\n✨ Database seeding completed successfully!');
+  } catch (error) {
+    console.error('❌ Error during seeding:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

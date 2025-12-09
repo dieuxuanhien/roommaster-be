@@ -1,206 +1,182 @@
 import prisma from '../../src/prisma';
 import { PERMISSIONS } from '../../src/config/roles';
 
+/**
+ * Seeds SystemFunctions (permissions) into the database
+ */
 export const seedSystemFunctions = async () => {
-  console.log('⚙️ Seeding system functions (permissions)...');
+  console.log('🔐 Seeding system functions (permissions)...');
 
-  const functions = Object.entries(PERMISSIONS).map(([key, value]) => {
-    // Convert 'employee.create' to 'Employee Create'
-    const name = value
-      .split('.')
-      .map((part) => part.replace(/_/g, ' '))
-      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-      .join(' - ');
+  const permissions = Object.values(PERMISSIONS);
 
-    return {
-      code: key, // EMPLOYEE_CREATE
-      name, // Employee - Create
-      functionKey: value // employee.create
-    };
-  });
-
-  for (const func of functions) {
+  for (const permission of permissions) {
     await prisma.systemFunction.upsert({
-      where: { functionKey: func.functionKey },
-      update: { code: func.code, name: func.name },
-      create: func
+      where: { functionKey: permission },
+      update: {},
+      create: {
+        code: permission,
+        name: permission
+          .split('.')
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' '),
+        functionKey: permission
+      }
     });
   }
 
-  console.log(`✅ ${functions.length} system functions seeded successfully!`);
+  console.log(`✅ ${permissions.length} system functions seeded successfully!`);
 };
 
+/**
+ * Seeds the 5 default UserGroups with their permissions
+ */
 export const seedUserGroups = async () => {
   console.log('👥 Seeding user groups...');
 
-  const P = PERMISSIONS;
-
-  const groups = [
-    {
+  // Admin - Full access to everything
+  const ADMIN_GROUP = await prisma.userGroup.upsert({
+    where: { code: 'ADMIN_GROUP' },
+    update: {},
+    create: {
       code: 'ADMIN_GROUP',
-      name: 'Administrators',
-      description: 'Full system access with all permissions',
-      permissions: Object.values(PERMISSIONS) // All permissions
-    },
-    {
-      code: 'RECEPTIONIST_GROUP',
-      name: 'Receptionists',
-      description: 'Front desk operations - reservations, check-in/out, customer management',
-      permissions: [
-        // Customer - full CRUD
-        P.CUSTOMER_CREATE,
-        P.CUSTOMER_READ,
-        P.CUSTOMER_UPDATE,
-        P.CUSTOMER_DELETE,
-        P.CUSTOMER_TIER_READ,
-        // Reservation - full CRUD
-        P.RESERVATION_CREATE,
-        P.RESERVATION_READ,
-        P.RESERVATION_UPDATE,
-        P.RESERVATION_DELETE,
-        // Stay record - full CRUD
-        P.STAY_RECORD_CREATE,
-        P.STAY_RECORD_READ,
-        P.STAY_RECORD_UPDATE,
-        P.STAY_RECORD_DELETE,
-        // Folio - full CRUD
-        P.FOLIO_CREATE,
-        P.FOLIO_READ,
-        P.FOLIO_UPDATE,
-        P.FOLIO_DELETE,
-        // Payment - create and read
-        P.PAYMENT_CREATE,
-        P.PAYMENT_READ,
-        // Room - read only
-        P.ROOM_READ,
-        P.ROOM_TYPE_READ,
-        // Service - read only
-        P.SERVICE_READ,
-        // Promotion - read only
-        P.PROMOTION_READ
-      ]
-    },
-    {
-      code: 'CASHIER_GROUP',
-      name: 'Cashiers',
-      description: 'Payment processing and billing operations',
-      permissions: [
-        // Folio - full CRUD
-        P.FOLIO_CREATE,
-        P.FOLIO_READ,
-        P.FOLIO_UPDATE,
-        P.FOLIO_DELETE,
-        // Payment - full CRUD
-        P.PAYMENT_CREATE,
-        P.PAYMENT_READ,
-        P.PAYMENT_UPDATE,
-        P.PAYMENT_DELETE,
-        // Customer - read only
-        P.CUSTOMER_READ,
-        // Stay record - read only
-        P.STAY_RECORD_READ,
-        // Shift - create and read
-        P.SHIFT_CREATE,
-        P.SHIFT_READ,
-        // Service - read only
-        P.SERVICE_READ
-      ]
-    },
-    {
-      code: 'HOUSEKEEPER_GROUP',
-      name: 'Housekeepers',
-      description: 'Room cleaning and housekeeping tasks',
-      permissions: [
-        // Housekeeping - full CRUD
-        P.HOUSEKEEPING_CREATE,
-        P.HOUSEKEEPING_READ,
-        P.HOUSEKEEPING_UPDATE,
-        P.HOUSEKEEPING_DELETE,
-        // Room - read and update
-        P.ROOM_READ,
-        P.ROOM_UPDATE
-      ]
-    },
-    {
-      code: 'WAITER_GROUP',
-      name: 'Waiters/Service Staff',
-      description: 'Food & beverage and service charge operations',
-      permissions: [
-        // Service - read only
-        P.SERVICE_READ,
-        // Folio - create and read (for adding charges)
-        P.FOLIO_CREATE,
-        P.FOLIO_READ,
-        // Stay record - read only
-        P.STAY_RECORD_READ
-      ]
+      name: 'Administrator',
+      description: 'Full system access with all permissions'
     }
-  ];
+  });
 
-  for (const group of groups) {
-    // Create or update user group
-    const userGroup = await prisma.userGroup.upsert({
-      where: { code: group.code },
-      update: { name: group.name, description: group.description },
-      create: {
-        code: group.code,
-        name: group.name,
-        description: group.description
-      }
+  // Receptionist - Guest management, reservations, check-in/out
+  const RECEPTIONIST_GROUP = await prisma.userGroup.upsert({
+    where: { code: 'RECEPTIONIST_GROUP' },
+    update: {},
+    create: {
+      code: 'RECEPTIONIST_GROUP',
+      name: 'Receptionist',
+      description: 'Front desk operations including reservations and guest management'
+    }
+  });
+
+  // Cashier - Financial operations
+  const CASHIER_GROUP = await prisma.userGroup.upsert({
+    where: { code: 'CASHIER_GROUP' },
+    update: {},
+    create: {
+      code: 'CASHIER_GROUP',
+      name: 'Cashier',
+      description: 'Financial operations including invoices, payments, and shift management'
+    }
+  });
+
+  // Housekeeper - Room cleaning and maintenance
+  const HOUSEKEEPER_GROUP = await prisma.userGroup.upsert({
+    where: { code: 'HOUSEKEEPER_GROUP' },
+    update: {},
+    create: {
+      code: 'HOUSEKEEPER_GROUP',
+      name: 'Housekeeper',
+      description: 'Housekeeping operations and room inspections'
+    }
+  });
+
+  // Waiter - F&B services
+  const WAITER_GROUP = await prisma.userGroup.upsert({
+    where: { code: 'WAITER_GROUP' },
+    update: {},
+    create: {
+      code: 'WAITER_GROUP',
+      name: 'Waiter',
+      description: 'Food & Beverage service operations'
+    }
+  });
+
+  console.log('✅ User groups created successfully!');
+
+  // Now assign permissions to each group
+  await assignPermissions(ADMIN_GROUP.id, [
+    ...Object.values(PERMISSIONS) // Admin gets all permissions
+  ]);
+
+  await assignPermissions(RECEPTIONIST_GROUP.id, [
+    PERMISSIONS.CUSTOMER_CREATE,
+    PERMISSIONS.CUSTOMER_READ,
+    PERMISSIONS.CUSTOMER_UPDATE,
+    PERMISSIONS.CUSTOMER_TIER_READ,
+    PERMISSIONS.RESERVATION_CREATE,
+    PERMISSIONS.RESERVATION_READ,
+    PERMISSIONS.RESERVATION_UPDATE,
+    PERMISSIONS.STAY_RECORD_CREATE,
+    PERMISSIONS.STAY_RECORD_READ,
+    PERMISSIONS.STAY_RECORD_UPDATE,
+    PERMISSIONS.ROOM_READ,
+    PERMISSIONS.ROOM_UPDATE,
+    PERMISSIONS.FOLIO_READ,
+    PERMISSIONS.SERVICE_READ,
+    PERMISSIONS.REPORT_READ
+  ]);
+
+  await assignPermissions(CASHIER_GROUP.id, [
+    PERMISSIONS.INVOICE_CREATE,
+    PERMISSIONS.INVOICE_READ,
+    PERMISSIONS.INVOICE_UPDATE,
+    PERMISSIONS.PAYMENT_CREATE,
+    PERMISSIONS.PAYMENT_READ,
+    PERMISSIONS.PAYMENT_UPDATE,
+    PERMISSIONS.FOLIO_CREATE,
+    PERMISSIONS.FOLIO_READ,
+    PERMISSIONS.FOLIO_UPDATE,
+    PERMISSIONS.SHIFT_CREATE,
+    PERMISSIONS.SHIFT_READ,
+    PERMISSIONS.SHIFT_SESSION_MANAGE,
+    PERMISSIONS.SHIFT_SESSION_READ,
+    PERMISSIONS.CUSTOMER_READ,
+    PERMISSIONS.SERVICE_READ,
+    PERMISSIONS.REPORT_READ
+  ]);
+
+  await assignPermissions(HOUSEKEEPER_GROUP.id, [
+    PERMISSIONS.HOUSEKEEPING_CREATE,
+    PERMISSIONS.HOUSEKEEPING_READ,
+    PERMISSIONS.HOUSEKEEPING_UPDATE,
+    PERMISSIONS.INSPECTION_CREATE,
+    PERMISSIONS.INSPECTION_READ,
+    PERMISSIONS.INSPECTION_UPDATE,
+    PERMISSIONS.ROOM_READ,
+    PERMISSIONS.ROOM_UPDATE
+  ]);
+
+  await assignPermissions(WAITER_GROUP.id, [
+    PERMISSIONS.SERVICE_READ,
+    PERMISSIONS.FOLIO_CREATE,
+    PERMISSIONS.FOLIO_READ,
+    PERMISSIONS.CUSTOMER_READ,
+    PERMISSIONS.STAY_RECORD_READ
+  ]);
+
+  console.log('✅ Permissions assigned to user groups!');
+};
+
+/**
+ * Helper function to assign permissions to a user group
+ */
+const assignPermissions = async (userGroupId: number, permissionCodes: string[]) => {
+  for (const code of permissionCodes) {
+    const systemFunction = await prisma.systemFunction.findUnique({
+      where: { functionKey: code }
     });
 
-    // Get system function IDs for the permissions
-    const systemFunctions = await prisma.systemFunction.findMany({
-      where: { functionKey: { in: group.permissions } }
-    });
-
-    // Delete existing permissions for this group
-    await prisma.permission.deleteMany({
-      where: { groupId: userGroup.id }
-    });
-
-    // Create new permissions
-    for (const func of systemFunctions) {
-      await prisma.permission.create({
-        data: {
-          groupId: userGroup.id,
-          functionId: func.id
+    if (systemFunction) {
+      await prisma.permission.upsert({
+        where: {
+          groupId_functionId: {
+            groupId: userGroupId,
+            functionId: systemFunction.id
+          }
+        },
+        update: {},
+        create: {
+          groupId: userGroupId,
+          functionId: systemFunction.id
         }
       });
     }
-
-    console.log(`  ✓ ${group.name}: ${systemFunctions.length} permissions assigned`);
   }
-
-  console.log('✅ User groups seeded successfully!');
-};
-
-export const assignUserGroupsToEmployees = async () => {
-  console.log('🔗 Assigning user groups to employees...');
-
-  const roleToGroupCode: Record<string, string> = {
-    ADMIN: 'ADMIN_GROUP',
-    RECEPTIONIST: 'RECEPTIONIST_GROUP',
-    CASHIER: 'CASHIER_GROUP',
-    HOUSEKEEPER: 'HOUSEKEEPER_GROUP',
-    WAITER: 'WAITER_GROUP'
-  };
-
-  for (const [role, groupCode] of Object.entries(roleToGroupCode)) {
-    const userGroup = await prisma.userGroup.findUnique({
-      where: { code: groupCode }
-    });
-
-    if (userGroup) {
-      const result = await prisma.employee.updateMany({
-        where: { role: role as any, userGroupId: null },
-        data: { userGroupId: userGroup.id }
-      });
-      if (result.count > 0) {
-        console.log(`  ✓ Assigned ${result.count} ${role}(s) to ${groupCode}`);
-      }
-    }
-  }
-
-  console.log('✅ User groups assigned to employees!');
 };

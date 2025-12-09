@@ -1,11 +1,21 @@
 import prisma from '../../src/prisma';
 import bcrypt from 'bcryptjs';
-import { Role } from '@prisma/client';
 
 export const seedEmployees = async () => {
   console.log('👤 Seeding employees...');
 
   const passwordHash = await bcrypt.hash('password123', 10);
+
+  // Get user groups
+  const adminGroup = await prisma.userGroup.findUnique({ where: { code: 'ADMIN_GROUP' } });
+  const receptionistGroup = await prisma.userGroup.findUnique({
+    where: { code: 'RECEPTIONIST_GROUP' }
+  });
+  const cashierGroup = await prisma.userGroup.findUnique({ where: { code: 'CASHIER_GROUP' } });
+  const housekeeperGroup = await prisma.userGroup.findUnique({
+    where: { code: 'HOUSEKEEPER_GROUP' }
+  });
+  const waiterGroup = await prisma.userGroup.findUnique({ where: { code: 'WAITER_GROUP' } });
 
   const employees = [
     {
@@ -13,7 +23,7 @@ export const seedEmployees = async () => {
       name: 'Admin User',
       email: 'admin@hotel.com',
       passwordHash,
-      role: Role.ADMIN,
+      userGroupId: adminGroup?.id,
       phone: '0123456789',
       isActive: true
     },
@@ -22,7 +32,7 @@ export const seedEmployees = async () => {
       name: 'Front Desk Receptionist',
       email: 'receptionist@hotel.com',
       passwordHash,
-      role: Role.RECEPTIONIST,
+      userGroupId: receptionistGroup?.id,
       phone: '0123456790',
       isActive: true
     },
@@ -31,7 +41,7 @@ export const seedEmployees = async () => {
       name: 'Cashier Staff',
       email: 'cashier@hotel.com',
       passwordHash,
-      role: Role.CASHIER,
+      userGroupId: cashierGroup?.id,
       phone: '0123456791',
       isActive: true
     },
@@ -40,7 +50,7 @@ export const seedEmployees = async () => {
       name: 'Housekeeper Staff',
       email: 'housekeeper@hotel.com',
       passwordHash,
-      role: Role.HOUSEKEEPER,
+      userGroupId: housekeeperGroup?.id,
       phone: '0123456792',
       isActive: true
     },
@@ -49,7 +59,7 @@ export const seedEmployees = async () => {
       name: 'Restaurant Waiter',
       email: 'waiter@hotel.com',
       passwordHash,
-      role: Role.WAITER,
+      userGroupId: waiterGroup?.id,
       phone: '0123456793',
       isActive: true
     }

@@ -15,14 +15,6 @@ datasource db {
 // ENUMS
 // ==========================================
 
-enum Role {
-  ADMIN
-  RECEPTIONIST
-  CASHIER
-  HOUSEKEEPER
-  WAITER
-}
-
 enum RoomStatus {
   AVAILABLE
   RESERVED
@@ -256,7 +248,6 @@ model Employee {
   name         String   @db.VarChar(100)
   email        String   @unique @db.VarChar(255)
   phone        String?  @db.VarChar(20)
-  role         Role     @default(RECEPTIONIST)
   userGroupId  Int?
   passwordHash String   @db.VarChar(255)
   isActive     Boolean  @default(true)

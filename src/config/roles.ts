@@ -1,5 +1,3 @@
-import { Role } from '@prisma/client';
-
 /**
  * System permission constants using RESOURCE.ACTION pattern
  * These are stored in the database (SystemFunction table) and assigned to UserGroups
@@ -124,8 +122,3 @@ export const PERMISSIONS = {
 } as const;
 
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
-
-/**
- * All available roles from Prisma enum
- */
-export const roles = Object.values(Role);

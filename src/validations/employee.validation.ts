@@ -1,4 +1,3 @@
-import { Role } from '@prisma/client';
 import Joi from 'joi';
 import { password, phoneNumber } from './custom.validation';
 
@@ -8,9 +7,6 @@ const createEmployee = {
     name: Joi.string().required().max(100),
     email: Joi.string().required().email().max(255),
     phone: Joi.string().custom(phoneNumber).max(20),
-    role: Joi.string()
-      .required()
-      .valid(Role.ADMIN, Role.RECEPTIONIST, Role.CASHIER, Role.HOUSEKEEPER, Role.WAITER),
     userGroupId: Joi.number().integer(),
     password: Joi.string().required().custom(password),
     isActive: Joi.boolean().default(true)
@@ -22,13 +18,7 @@ const getEmployees = {
     code: Joi.string(),
     name: Joi.string(),
     email: Joi.string(),
-    role: Joi.string().valid(
-      Role.ADMIN,
-      Role.RECEPTIONIST,
-      Role.CASHIER,
-      Role.HOUSEKEEPER,
-      Role.WAITER
-    ),
+    userGroupId: Joi.number().integer(),
     isActive: Joi.boolean(),
     sortBy: Joi.string(),
     sortType: Joi.string().valid('asc', 'desc'),
@@ -53,13 +43,6 @@ const updateEmployee = {
       name: Joi.string().max(100),
       email: Joi.string().email().max(255),
       phone: Joi.string().custom(phoneNumber).max(20),
-      role: Joi.string().valid(
-        Role.ADMIN,
-        Role.RECEPTIONIST,
-        Role.CASHIER,
-        Role.HOUSEKEEPER,
-        Role.WAITER
-      ),
       userGroupId: Joi.number().integer().allow(null),
       password: Joi.string().custom(password),
       isActive: Joi.boolean()

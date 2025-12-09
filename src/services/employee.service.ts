@@ -1,4 +1,4 @@
-import { Employee, Role, Prisma } from '@prisma/client';
+import { Employee, Prisma } from '@prisma/client';
 import httpStatus from 'http-status';
 import prisma from 'prisma';
 import ApiError from 'utils/ApiError';
@@ -13,7 +13,6 @@ const createEmployee = async (data: {
   name: string;
   email: string;
   phone?: string;
-  role: Role;
   userGroupId?: number;
   password: string;
   isActive?: boolean;
@@ -61,7 +60,6 @@ const queryEmployees = async (
         name: true,
         email: true,
         phone: true,
-        role: true,
         userGroupId: true,
         isActive: true,
         createdAt: true,
