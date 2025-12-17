@@ -2,7 +2,7 @@ import express from 'express';
 import auth from '../../middlewares/auth';
 import validate from '../../middlewares/validate';
 import { customerTierValidation } from '../../validations';
-import { customerTierController } from '../../controllers';
+import { getCustomerTierController } from '../../core/bootstrap';
 import { PERMISSIONS } from '../../config/roles';
 
 const router = express.Router();
@@ -79,12 +79,12 @@ router
   .post(
     auth(PERMISSIONS.CUSTOMER_TIER_CREATE),
     validate(customerTierValidation.createCustomerTier),
-    customerTierController.createCustomerTier
+    getCustomerTierController().createCustomerTier
   )
   .get(
     auth(PERMISSIONS.CUSTOMER_TIER_READ),
     validate(customerTierValidation.getCustomerTiers),
-    customerTierController.getCustomerTiers
+    getCustomerTierController().getCustomerTiers
   );
 
 /**
@@ -168,17 +168,17 @@ router
   .get(
     auth(PERMISSIONS.CUSTOMER_TIER_READ),
     validate(customerTierValidation.getCustomerTier),
-    customerTierController.getCustomerTier
+    getCustomerTierController().getCustomerTier
   )
   .patch(
     auth(PERMISSIONS.CUSTOMER_TIER_UPDATE),
     validate(customerTierValidation.updateCustomerTier),
-    customerTierController.updateCustomerTier
+    getCustomerTierController().updateCustomerTier
   )
   .delete(
     auth(PERMISSIONS.CUSTOMER_TIER_DELETE),
     validate(customerTierValidation.deleteCustomerTier),
-    customerTierController.deleteCustomerTier
+    getCustomerTierController().deleteCustomerTier
   );
 
 /**
@@ -213,7 +213,7 @@ router.post(
   '/upgrade/:customerId',
   auth(PERMISSIONS.CUSTOMER_TIER_UPDATE),
   validate(customerTierValidation.checkUpgrade),
-  customerTierController.checkUpgrade
+  getCustomerTierController().checkUpgrade
 );
 
 /**
@@ -241,7 +241,7 @@ router.post(
 router.post(
   '/batch-upgrade',
   auth(PERMISSIONS.CUSTOMER_TIER_UPDATE),
-  customerTierController.batchUpgrade
+  getCustomerTierController().batchUpgrade
 );
 
 export default router;

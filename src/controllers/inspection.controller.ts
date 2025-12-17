@@ -1,42 +1,46 @@
 import httpStatus from 'http-status';
 import { Request, Response } from 'express';
 import catchAsync from '../utils/catchAsync';
-import { inspectionService } from '../services';
+import InspectionService from '../services/inspection.service';
+import { Injectable } from 'core/decorators';
 
-const createInspection = catchAsync(async (req: Request, res: Response) => {
-  const { stayDetailId } = req.params;
-  const inspectedById = (req.user as { id: number }).id;
+@Injectable()
+export class InspectionController {
+  constructor(private readonly inspectionService: InspectionService) {}
 
-  const inspection = await inspectionService.createInspection(
-    Number(stayDetailId),
-    inspectedById,
-    req.body
-  );
+  createInspection = catchAsync(async (req: Request, res: Response) => {
+    const { stayDetailId } = req.params;
+    const inspectedById = (req.user as { id: number }).id;
 
-  res.status(httpStatus.CREATED).send(inspection);
-});
+    const inspection = await this.inspectionService.createInspection(
+      Number(stayDetailId),
+      inspectedById,
+      req.body
+    );
 
-const getInspection = catchAsync(async (req: Request, res: Response) => {
-  const { stayDetailId } = req.params;
-  const inspection = await inspectionService.getInspectionByStayDetail(Number(stayDetailId));
-  res.send(inspection);
-});
+    res.status(httpStatus.CREATED).send(inspection);
+  });
 
-const updateInspection = catchAsync(async (req: Request, res: Response) => {
-  const { stayDetailId } = req.params;
-  const inspection = await inspectionService.updateInspection(Number(stayDetailId), req.body);
-  res.send(inspection);
-});
+  getInspection = catchAsync(async (req: Request, res: Response) => {
+    const { stayDetailId } = req.params;
+    const inspection = await this.inspectionService.getInspectionByStayDetail(Number(stayDetailId));
+    res.send(inspection);
+  });
 
-const canCheckout = catchAsync(async (req: Request, res: Response) => {
-  const { stayDetailId } = req.params;
-  const result = await inspectionService.canCheckout(Number(stayDetailId));
-  res.send({ canCheckout: result });
-});
+  updateInspection = catchAsync(async (req: Request, res: Response) => {
+    const { stayDetailId } = req.params;
+    const inspection = await this.inspectionService.updateInspection(
+      Number(stayDetailId),
+      req.body
+    );
+    res.send(inspection);
+  });
 
-export default {
-  createInspection,
-  getInspection,
-  updateInspection,
-  canCheckout
-};
+  canCheckout = catchAsync(async (req: Request, res: Response) => {
+    const { stayDetailId } = req.params;
+    const result = await this.inspectionService.canCheckout(Number(stayDetailId));
+    res.send({ canCheckout: result });
+  });
+}
+
+export default InspectionController;

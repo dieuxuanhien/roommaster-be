@@ -2,7 +2,7 @@ import express from 'express';
 import auth from '../../middlewares/auth';
 import validate from '../../middlewares/validate';
 import { invoiceValidation } from '../../validations';
-import { invoiceController } from '../../controllers';
+import { getInvoiceController } from '../../core/bootstrap';
 import { PERMISSIONS } from '../../config/roles';
 
 const router = express.Router();
@@ -72,12 +72,12 @@ router
   .post(
     auth(PERMISSIONS.INVOICE_CREATE),
     validate(invoiceValidation.createInvoice),
-    invoiceController.createInvoice
+    getInvoiceController().createInvoice
   )
   .get(
     auth(PERMISSIONS.INVOICE_READ),
     validate(invoiceValidation.getInvoices),
-    invoiceController.getInvoices
+    getInvoiceController().getInvoices
   );
 
 /**
@@ -107,7 +107,7 @@ router
   .get(
     auth(PERMISSIONS.INVOICE_READ),
     validate(invoiceValidation.getInvoice),
-    invoiceController.getInvoice
+    getInvoiceController().getInvoice
   );
 
 /**
@@ -136,7 +136,7 @@ router.get(
   '/:invoiceId/print',
   auth(PERMISSIONS.INVOICE_READ),
   validate(invoiceValidation.printInvoice),
-  invoiceController.getInvoiceForPrint
+  getInvoiceController().getInvoiceForPrint
 );
 
 export default router;

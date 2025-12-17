@@ -2,108 +2,107 @@ import httpStatus from 'http-status';
 import pick from 'utils/pick';
 import ApiError from 'utils/ApiError';
 import catchAsync from 'utils/catchAsync';
-import { roomService } from 'services';
+import RoomService from 'services/room.service';
+import { Injectable } from 'core/decorators';
 
 // Room Type Controllers
-const createRoomType = catchAsync(async (req, res) => {
-  const roomType = await roomService.createRoomType(req.body);
-  res.status(httpStatus.CREATED).send(roomType);
-});
 
-const getRoomTypes = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'isActive']);
-  const options = pick(req.query, ['sortBy', 'sortType', 'limit', 'page']);
-  const result = await roomService.queryRoomTypes(filter, options);
-  res.send(result);
-});
+@Injectable()
+export class RoomController {
+  constructor(private readonly roomService: RoomService) {}
 
-const getRoomType = catchAsync(async (req, res) => {
-  const roomType = await roomService.getRoomTypeById(Number(req.params.roomTypeId));
-  if (!roomType) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Room type not found');
-  }
-  res.send(roomType);
-});
+  createRoomType = catchAsync(async (req, res) => {
+    const roomType = await this.roomService.createRoomType(req.body);
+    res.status(httpStatus.CREATED).send(roomType);
+  });
 
-const updateRoomType = catchAsync(async (req, res) => {
-  const roomType = await roomService.updateRoomTypeById(Number(req.params.roomTypeId), req.body);
-  res.send(roomType);
-});
+  getRoomTypes = catchAsync(async (req, res) => {
+    const filter = pick(req.query, ['name', 'isActive']);
+    const options = pick(req.query, ['sortBy', 'sortType', 'limit', 'page']);
+    const result = await this.roomService.queryRoomTypes(filter, options);
+    res.send(result);
+  });
 
-const deleteRoomType = catchAsync(async (req, res) => {
-  await roomService.deleteRoomTypeById(Number(req.params.roomTypeId));
-  res.status(httpStatus.NO_CONTENT).send();
-});
+  getRoomType = catchAsync(async (req, res) => {
+    const roomType = await this.roomService.getRoomTypeById(Number(req.params.roomTypeId));
+    if (!roomType) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Room type not found');
+    }
+    res.send(roomType);
+  });
 
-// Room Controllers
-const createRoom = catchAsync(async (req, res) => {
-  const room = await roomService.createRoom(req.body);
-  res.status(httpStatus.CREATED).send(room);
-});
+  updateRoomType = catchAsync(async (req, res) => {
+    const roomType = await this.roomService.updateRoomTypeById(
+      Number(req.params.roomTypeId),
+      req.body
+    );
+    res.send(roomType);
+  });
 
-const getRooms = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['roomNumber', 'roomTypeId', 'floor', 'status', 'isActive']);
-  const options = pick(req.query, ['sortBy', 'sortType', 'limit', 'page']);
-  const result = await roomService.queryRooms(filter, options);
-  res.send(result);
-});
+  deleteRoomType = catchAsync(async (req, res) => {
+    await this.roomService.deleteRoomTypeById(Number(req.params.roomTypeId));
+    res.status(httpStatus.NO_CONTENT).send();
+  });
 
-const getRoom = catchAsync(async (req, res) => {
-  const room = await roomService.getRoomById(Number(req.params.roomId));
-  if (!room) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Room not found');
-  }
-  res.send(room);
-});
+  // Room Controllers
+  createRoom = catchAsync(async (req, res) => {
+    const room = await this.roomService.createRoom(req.body);
+    res.status(httpStatus.CREATED).send(room);
+  });
 
-const updateRoom = catchAsync(async (req, res) => {
-  const room = await roomService.updateRoomById(Number(req.params.roomId), req.body);
-  res.send(room);
-});
+  getRooms = catchAsync(async (req, res) => {
+    const filter = pick(req.query, ['roomNumber', 'roomTypeId', 'floor', 'status', 'isActive']);
+    const options = pick(req.query, ['sortBy', 'sortType', 'limit', 'page']);
+    const result = await this.roomService.queryRooms(filter, options);
+    res.send(result);
+  });
 
-const updateRoomStatus = catchAsync(async (req, res) => {
-  const room = await roomService.updateRoomStatus(Number(req.params.roomId), req.body.status);
-  res.send(room);
-});
+  getRoom = catchAsync(async (req, res) => {
+    const room = await this.roomService.getRoomById(Number(req.params.roomId));
+    if (!room) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Room not found');
+    }
+    res.send(room);
+  });
 
-const deleteRoom = catchAsync(async (req, res) => {
-  await roomService.deleteRoomById(Number(req.params.roomId));
-  res.status(httpStatus.NO_CONTENT).send();
-});
+  updateRoom = catchAsync(async (req, res) => {
+    const room = await this.roomService.updateRoomById(Number(req.params.roomId), req.body);
+    res.send(room);
+  });
 
-// Availability
-const checkAvailability = catchAsync(async (req, res) => {
-  const { checkInDate, checkOutDate, roomTypeId } = req.query;
-  const availability = await roomService.checkAvailability(
-    new Date(checkInDate as string),
-    new Date(checkOutDate as string),
-    roomTypeId ? Number(roomTypeId) : undefined
-  );
-  res.send(availability);
-});
+  updateRoomStatus = catchAsync(async (req, res) => {
+    const room = await this.roomService.updateRoomStatus(
+      Number(req.params.roomId),
+      req.body.status
+    );
+    res.send(room);
+  });
 
-const getAvailableRooms = catchAsync(async (req, res) => {
-  const { checkInDate, checkOutDate, roomTypeId } = req.query;
-  const rooms = await roomService.getAvailableRooms(
-    new Date(checkInDate as string),
-    new Date(checkOutDate as string),
-    roomTypeId ? Number(roomTypeId) : undefined
-  );
-  res.send(rooms);
-});
+  deleteRoom = catchAsync(async (req, res) => {
+    await this.roomService.deleteRoomById(Number(req.params.roomId));
+    res.status(httpStatus.NO_CONTENT).send();
+  });
 
-export default {
-  createRoomType,
-  getRoomTypes,
-  getRoomType,
-  updateRoomType,
-  deleteRoomType,
-  createRoom,
-  getRooms,
-  getRoom,
-  updateRoom,
-  updateRoomStatus,
-  deleteRoom,
-  checkAvailability,
-  getAvailableRooms
-};
+  // Availability
+  checkAvailability = catchAsync(async (req, res) => {
+    const { checkInDate, checkOutDate, roomTypeId } = req.query;
+    const availability = await this.roomService.checkAvailability(
+      new Date(checkInDate as string),
+      new Date(checkOutDate as string),
+      roomTypeId ? Number(roomTypeId) : undefined
+    );
+    res.send(availability);
+  });
+
+  getAvailableRooms = catchAsync(async (req, res) => {
+    const { checkInDate, checkOutDate, roomTypeId } = req.query;
+    const rooms = await this.roomService.getAvailableRooms(
+      new Date(checkInDate as string),
+      new Date(checkOutDate as string),
+      roomTypeId ? Number(roomTypeId) : undefined
+    );
+    res.send(rooms);
+  });
+}
+
+export default RoomController;

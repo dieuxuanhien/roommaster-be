@@ -1,5 +1,12 @@
-export { default as authController } from './auth.controller';
-export { default as employeeController } from './employee.controller';
+// Class exports for DI
+export { AuthController } from './auth.controller';
+export { EmployeeController } from './employee.controller';
+
+// Re-export getters from bootstrap for convenience
+export { getAuthController, getEmployeeController } from 'core/bootstrap';
+
+// Note: The following controllers need to be converted to class-based pattern
+// For now, they are exported as default objects for backward compatibility
 export { default as roomController } from './room.controller';
 export { default as customerController } from './customer.controller';
 export { default as reservationController } from './reservation.controller';

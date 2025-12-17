@@ -1,96 +1,94 @@
 import { Request, Response } from 'express';
 import catchAsync from '../utils/catchAsync';
-import { reportService } from '../services';
+import ReportService from '../services/report.service';
 import pick from '../utils/pick';
+import { Injectable } from 'core/decorators';
 
-const getDashboard = catchAsync(async (req: Request, res: Response) => {
-  const dashboard = await reportService.getDashboard();
-  res.send(dashboard);
-});
+@Injectable()
+export class ReportController {
+  constructor(private readonly reportService: ReportService) {}
 
-const getOccupancyReport = catchAsync(async (req: Request, res: Response) => {
-  const { fromDate, toDate } = pick(req.query, ['fromDate', 'toDate']);
+  getDashboard = catchAsync(async (req: Request, res: Response) => {
+    const dashboard = await this.reportService.getDashboard();
+    res.send(dashboard);
+  });
 
-  const from = fromDate ? new Date(fromDate as string) : new Date();
-  const to = toDate ? new Date(toDate as string) : new Date();
+  getOccupancyReport = catchAsync(async (req: Request, res: Response) => {
+    const { fromDate, toDate } = pick(req.query, ['fromDate', 'toDate']);
 
-  // Default to last 30 days if not specified
-  if (!fromDate) {
-    from.setDate(from.getDate() - 30);
-  }
+    const from = fromDate ? new Date(fromDate as string) : new Date();
+    const to = toDate ? new Date(toDate as string) : new Date();
 
-  const report = await reportService.getOccupancyReport(from, to);
-  res.send(report);
-});
+    // Default to last 30 days if not specified
+    if (!fromDate) {
+      from.setDate(from.getDate() - 30);
+    }
 
-const getRevenueReport = catchAsync(async (req: Request, res: Response) => {
-  const { fromDate, toDate } = pick(req.query, ['fromDate', 'toDate']);
+    const report = await this.reportService.getOccupancyReport(from, to);
+    res.send(report);
+  });
 
-  const from = fromDate ? new Date(fromDate as string) : new Date();
-  const to = toDate ? new Date(toDate as string) : new Date();
+  getRevenueReport = catchAsync(async (req: Request, res: Response) => {
+    const { fromDate, toDate } = pick(req.query, ['fromDate', 'toDate']);
 
-  if (!fromDate) {
-    from.setDate(from.getDate() - 30);
-  }
+    const from = fromDate ? new Date(fromDate as string) : new Date();
+    const to = toDate ? new Date(toDate as string) : new Date();
 
-  const report = await reportService.getRevenueReport(from, to);
-  res.send(report);
-});
+    if (!fromDate) {
+      from.setDate(from.getDate() - 30);
+    }
 
-const getBookingReport = catchAsync(async (req: Request, res: Response) => {
-  const { fromDate, toDate } = pick(req.query, ['fromDate', 'toDate']);
+    const report = await this.reportService.getRevenueReport(from, to);
+    res.send(report);
+  });
 
-  const from = fromDate ? new Date(fromDate as string) : new Date();
-  const to = toDate ? new Date(toDate as string) : new Date();
+  getBookingReport = catchAsync(async (req: Request, res: Response) => {
+    const { fromDate, toDate } = pick(req.query, ['fromDate', 'toDate']);
 
-  if (!fromDate) {
-    from.setDate(from.getDate() - 30);
-  }
+    const from = fromDate ? new Date(fromDate as string) : new Date();
+    const to = toDate ? new Date(toDate as string) : new Date();
 
-  const report = await reportService.getBookingReport(from, to);
-  res.send(report);
-});
+    if (!fromDate) {
+      from.setDate(from.getDate() - 30);
+    }
 
-const getDailySnapshot = catchAsync(async (req: Request, res: Response) => {
-  const date = req.query.date ? new Date(req.query.date as string) : new Date();
-  const snapshot = await reportService.getDailySnapshot(date);
-  res.send(snapshot);
-});
+    const report = await this.reportService.getBookingReport(from, to);
+    res.send(report);
+  });
 
-const getSnapshots = catchAsync(async (req: Request, res: Response) => {
-  const { fromDate, toDate } = pick(req.query, ['fromDate', 'toDate']);
+  getDailySnapshot = catchAsync(async (req: Request, res: Response) => {
+    const date = req.query.date ? new Date(req.query.date as string) : new Date();
+    const snapshot = await this.reportService.getDailySnapshot(date);
+    res.send(snapshot);
+  });
 
-  const from = fromDate ? new Date(fromDate as string) : new Date();
-  const to = toDate ? new Date(toDate as string) : new Date();
+  getSnapshots = catchAsync(async (req: Request, res: Response) => {
+    const { fromDate, toDate } = pick(req.query, ['fromDate', 'toDate']);
 
-  if (!fromDate) {
-    from.setDate(from.getDate() - 30);
-  }
+    const from = fromDate ? new Date(fromDate as string) : new Date();
+    const to = toDate ? new Date(toDate as string) : new Date();
 
-  const snapshots = await reportService.getSnapshotsInRange(from, to);
-  res.send(snapshots);
-});
+    if (!fromDate) {
+      from.setDate(from.getDate() - 30);
+    }
 
-const getRevenueByRoomType = catchAsync(async (req: Request, res: Response) => {
-  const { fromDate, toDate } = pick(req.query, ['fromDate', 'toDate']);
+    const snapshots = await this.reportService.getSnapshotsInRange(from, to);
+    res.send(snapshots);
+  });
 
-  const from = fromDate ? new Date(fromDate as string) : new Date();
-  const to = toDate ? new Date(toDate as string) : new Date();
+  getRevenueByRoomType = catchAsync(async (req: Request, res: Response) => {
+    const { fromDate, toDate } = pick(req.query, ['fromDate', 'toDate']);
 
-  if (!fromDate) {
-    from.setDate(from.getDate() - 30);
-  }
+    const from = fromDate ? new Date(fromDate as string) : new Date();
+    const to = toDate ? new Date(toDate as string) : new Date();
 
-  const report = await reportService.getRevenueByRoomType(from, to);
-  res.send(report);
-});
+    if (!fromDate) {
+      from.setDate(from.getDate() - 30);
+    }
 
-export default {
-  getDashboard,
-  getOccupancyReport,
-  getRevenueReport,
-  getBookingReport,
-  getDailySnapshot,
-  getSnapshots,
-  getRevenueByRoomType
-};
+    const report = await this.reportService.getRevenueByRoomType(from, to);
+    res.send(report);
+  });
+}
+
+export default ReportController;

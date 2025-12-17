@@ -1,7 +1,7 @@
 import express from 'express';
 import validate from 'middlewares/validate';
 import customerValidation from 'validations/customer.validation';
-import { customerController } from 'controllers';
+import { getCustomerController } from '../../core/bootstrap';
 import auth from 'middlewares/auth';
 import { PERMISSIONS } from 'config/roles';
 
@@ -67,12 +67,12 @@ router
   .post(
     auth(PERMISSIONS.CUSTOMER_TIER_CREATE),
     validate(customerValidation.createCustomerTier),
-    customerController.createCustomerTier
+    getCustomerController().createCustomerTier
   )
   .get(
     auth(PERMISSIONS.CUSTOMER_TIER_READ),
     validate(customerValidation.getCustomerTiers),
-    customerController.getCustomerTiers
+    getCustomerController().getCustomerTiers
   );
 
 /**
@@ -138,17 +138,17 @@ router
   .get(
     auth(PERMISSIONS.CUSTOMER_TIER_READ),
     validate(customerValidation.getCustomerTier),
-    customerController.getCustomerTier
+    getCustomerController().getCustomerTier
   )
   .patch(
     auth(PERMISSIONS.CUSTOMER_TIER_UPDATE),
     validate(customerValidation.updateCustomerTier),
-    customerController.updateCustomerTier
+    getCustomerController().updateCustomerTier
   )
   .delete(
     auth(PERMISSIONS.CUSTOMER_TIER_DELETE),
     validate(customerValidation.deleteCustomerTier),
-    customerController.deleteCustomerTier
+    getCustomerController().deleteCustomerTier
   );
 
 // ===== CUSTOMERS =====
@@ -225,12 +225,12 @@ router
   .post(
     auth(PERMISSIONS.CUSTOMER_CREATE),
     validate(customerValidation.createCustomer),
-    customerController.createCustomer
+    getCustomerController().createCustomer
   )
   .get(
     auth(PERMISSIONS.CUSTOMER_READ),
     validate(customerValidation.getCustomers),
-    customerController.getCustomers
+    getCustomerController().getCustomers
   );
 
 /**
@@ -266,7 +266,7 @@ router.get(
   '/search',
   auth(PERMISSIONS.CUSTOMER_READ),
   validate(customerValidation.searchCustomers),
-  customerController.searchCustomers
+  getCustomerController().searchCustomers
 );
 
 /**
@@ -358,17 +358,17 @@ router
   .get(
     auth(PERMISSIONS.CUSTOMER_READ),
     validate(customerValidation.getCustomer),
-    customerController.getCustomer
+    getCustomerController().getCustomer
   )
   .patch(
     auth(PERMISSIONS.CUSTOMER_UPDATE),
     validate(customerValidation.updateCustomer),
-    customerController.updateCustomer
+    getCustomerController().updateCustomer
   )
   .delete(
     auth(PERMISSIONS.CUSTOMER_DELETE),
     validate(customerValidation.deleteCustomer),
-    customerController.deleteCustomer
+    getCustomerController().deleteCustomer
   );
 
 export default router;

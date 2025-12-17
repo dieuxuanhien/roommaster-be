@@ -2,7 +2,7 @@ import express from 'express';
 import auth from '../../middlewares/auth';
 import validate from '../../middlewares/validate';
 import { reportValidation } from '../../validations';
-import { reportController } from '../../controllers';
+import { getReportController } from '../../core/bootstrap';
 import { PERMISSIONS } from '../../config/roles';
 
 const router = express.Router();
@@ -41,7 +41,7 @@ router.get(
   '/daily-snapshot',
   auth(PERMISSIONS.REPORT_READ),
   validate(reportValidation.getSnapshot),
-  reportController.getDailySnapshot
+  getReportController().getDailySnapshot
 );
 
 /**
@@ -85,7 +85,7 @@ router.get(
   '/snapshots',
   auth(PERMISSIONS.REPORT_READ),
   validate(reportValidation.getSnapshots),
-  reportController.getSnapshots
+  getReportController().getSnapshots
 );
 
 /**
@@ -125,7 +125,7 @@ router.get(
   '/occupancy',
   auth(PERMISSIONS.REPORT_READ),
   validate(reportValidation.getOccupancyReport),
-  reportController.getOccupancyReport
+  getReportController().getOccupancyReport
 );
 
 /**
@@ -161,7 +161,7 @@ router.get(
   '/revenue',
   auth(PERMISSIONS.REPORT_READ),
   validate(reportValidation.getRevenueReport),
-  reportController.getRevenueReport
+  getReportController().getRevenueReport
 );
 
 /**
@@ -197,7 +197,7 @@ router.get(
   '/revenue-by-room-type',
   auth(PERMISSIONS.REPORT_READ),
   validate(reportValidation.getRevenueByRoomType),
-  reportController.getRevenueByRoomType
+  getReportController().getRevenueByRoomType
 );
 
 /**
@@ -233,7 +233,7 @@ router.get(
   '/bookings',
   auth(PERMISSIONS.REPORT_READ),
   validate(reportValidation.getBookingReport),
-  reportController.getBookingReport
+  getReportController().getBookingReport
 );
 
 /**
@@ -252,6 +252,6 @@ router.get(
  *       "403":
  *         description: Forbidden
  */
-router.get('/dashboard', auth(PERMISSIONS.REPORT_READ), reportController.getDashboard);
+router.get('/dashboard', auth(PERMISSIONS.REPORT_READ), getReportController().getDashboard);
 
 export default router;

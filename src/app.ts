@@ -9,9 +9,15 @@ import morgan from './config/morgan';
 import xss from './middlewares/xss';
 import { jwtStrategy } from './config/passport';
 import { authLimiter } from './middlewares/rateLimiter';
-import routes from './routes/v1';
 import { errorConverter, errorHandler } from './middlewares/error';
 import ApiError from './utils/ApiError';
+import { bootstrap } from './core/bootstrap';
+
+// Bootstrap DI container - must be called before routes are loaded
+bootstrap();
+
+// Import routes AFTER bootstrap
+import routes from './routes/v1';
 
 const app = express();
 

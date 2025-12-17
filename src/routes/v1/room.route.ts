@@ -1,7 +1,7 @@
 import express from 'express';
 import validate from 'middlewares/validate';
 import roomValidation from 'validations/room.validation';
-import { roomController } from 'controllers';
+import { getRoomController } from '../../core/bootstrap';
 import auth from 'middlewares/auth';
 import { PERMISSIONS } from 'config/roles';
 
@@ -83,12 +83,12 @@ router
   .post(
     auth(PERMISSIONS.ROOM_TYPE_CREATE),
     validate(roomValidation.createRoomType),
-    roomController.createRoomType
+    getRoomController().createRoomType
   )
   .get(
     auth(PERMISSIONS.ROOM_TYPE_READ),
     validate(roomValidation.getRoomTypes),
-    roomController.getRoomTypes
+    getRoomController().getRoomTypes
   );
 
 /**
@@ -172,17 +172,17 @@ router
   .get(
     auth(PERMISSIONS.ROOM_TYPE_READ),
     validate(roomValidation.getRoomType),
-    roomController.getRoomType
+    getRoomController().getRoomType
   )
   .patch(
     auth(PERMISSIONS.ROOM_TYPE_UPDATE),
     validate(roomValidation.updateRoomType),
-    roomController.updateRoomType
+    getRoomController().updateRoomType
   )
   .delete(
     auth(PERMISSIONS.ROOM_TYPE_DELETE),
     validate(roomValidation.deleteRoomType),
-    roomController.deleteRoomType
+    getRoomController().deleteRoomType
   );
 
 // ===== ROOMS =====
@@ -258,9 +258,13 @@ router
   .post(
     auth(PERMISSIONS.ROOM_CREATE),
     validate(roomValidation.createRoom),
-    roomController.createRoom
+    getRoomController().createRoom
   )
-  .get(auth(PERMISSIONS.ROOM_READ), validate(roomValidation.getRooms), roomController.getRooms);
+  .get(
+    auth(PERMISSIONS.ROOM_READ),
+    validate(roomValidation.getRooms),
+    getRoomController().getRooms
+  );
 
 /**
  * @swagger
@@ -299,7 +303,7 @@ router.get(
   '/available',
   auth(PERMISSIONS.ROOM_READ),
   validate(roomValidation.getAvailableRooms),
-  roomController.getAvailableRooms
+  getRoomController().getAvailableRooms
 );
 
 /**
@@ -337,7 +341,7 @@ router.get(
   '/availability',
   auth(PERMISSIONS.ROOM_READ),
   validate(roomValidation.getAvailableRooms),
-  roomController.checkAvailability
+  getRoomController().checkAvailability
 );
 
 /**
@@ -419,16 +423,16 @@ router.get(
  */
 router
   .route('/:roomId')
-  .get(auth(PERMISSIONS.ROOM_READ), validate(roomValidation.getRoom), roomController.getRoom)
+  .get(auth(PERMISSIONS.ROOM_READ), validate(roomValidation.getRoom), getRoomController().getRoom)
   .patch(
     auth(PERMISSIONS.ROOM_UPDATE),
     validate(roomValidation.updateRoom),
-    roomController.updateRoom
+    getRoomController().updateRoom
   )
   .delete(
     auth(PERMISSIONS.ROOM_DELETE),
     validate(roomValidation.deleteRoom),
-    roomController.deleteRoom
+    getRoomController().deleteRoom
   );
 
 /**
@@ -472,7 +476,7 @@ router.patch(
   '/:roomId/status',
   auth(PERMISSIONS.ROOM_UPDATE),
   validate(roomValidation.updateRoomStatus),
-  roomController.updateRoomStatus
+  getRoomController().updateRoomStatus
 );
 
 export default router;

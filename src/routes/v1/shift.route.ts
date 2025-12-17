@@ -2,7 +2,7 @@ import express from 'express';
 import auth from '../../middlewares/auth';
 import validate from '../../middlewares/validate';
 import { shiftValidation } from '../../validations';
-import { shiftController } from '../../controllers';
+import { getShiftController } from '../../core/bootstrap';
 import { PERMISSIONS } from '../../config/roles';
 
 const router = express.Router();
@@ -78,12 +78,12 @@ router
   .post(
     auth(PERMISSIONS.SHIFT_CREATE),
     validate(shiftValidation.createWorkShift),
-    shiftController.createWorkShift
+    getShiftController().createWorkShift
   )
   .get(
     auth(PERMISSIONS.SHIFT_READ),
     validate(shiftValidation.getWorkShifts),
-    shiftController.getWorkShifts
+    getShiftController().getWorkShifts
   );
 
 /**
@@ -168,17 +168,17 @@ router
   .get(
     auth(PERMISSIONS.SHIFT_READ),
     validate(shiftValidation.getWorkShift),
-    shiftController.getWorkShift
+    getShiftController().getWorkShift
   )
   .patch(
     auth(PERMISSIONS.SHIFT_UPDATE),
     validate(shiftValidation.updateWorkShift),
-    shiftController.updateWorkShift
+    getShiftController().updateWorkShift
   )
   .delete(
     auth(PERMISSIONS.SHIFT_DELETE),
     validate(shiftValidation.deleteWorkShift),
-    shiftController.deleteWorkShift
+    getShiftController().deleteWorkShift
   );
 
 // ===== SHIFT SESSIONS =====
@@ -217,7 +217,7 @@ router.post(
   '/sessions/open',
   auth(PERMISSIONS.SHIFT_SESSION_MANAGE),
   validate(shiftValidation.openShiftSession),
-  shiftController.openSession
+  getShiftController().openSession
 );
 
 /**
@@ -252,7 +252,7 @@ router.post(
   '/sessions/:sessionId/close',
   auth(PERMISSIONS.SHIFT_SESSION_MANAGE),
   validate(shiftValidation.closeShiftSession),
-  shiftController.closeSession
+  getShiftController().closeSession
 );
 
 /**
@@ -287,7 +287,7 @@ router.post(
   '/sessions/:sessionId/approve',
   auth(PERMISSIONS.SHIFT_SESSION_APPROVE),
   validate(shiftValidation.approveShiftSession),
-  shiftController.approveSession
+  getShiftController().approveSession
 );
 
 /**
@@ -317,7 +317,7 @@ router.get(
   '/sessions',
   auth(PERMISSIONS.SHIFT_SESSION_READ),
   validate(shiftValidation.getShiftSessions),
-  shiftController.getSessions
+  getShiftController().getSessions
 );
 
 /**
@@ -338,7 +338,7 @@ router.get(
   '/sessions/me',
   auth(PERMISSIONS.SHIFT_SESSION_MANAGE),
   validate(shiftValidation.getMyCurrentSession),
-  shiftController.getCurrentSession
+  getShiftController().getCurrentSession
 );
 
 export default router;

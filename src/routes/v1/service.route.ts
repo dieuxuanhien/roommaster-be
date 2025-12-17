@@ -1,7 +1,7 @@
 import express from 'express';
 import validate from 'middlewares/validate';
 import serviceValidation from 'validations/service.validation';
-import { serviceController } from 'controllers';
+import { getServiceController } from '../../core/bootstrap';
 import auth from 'middlewares/auth';
 import { PERMISSIONS } from 'config/roles';
 
@@ -87,12 +87,12 @@ router
   .post(
     auth(PERMISSIONS.SERVICE_CREATE),
     validate(serviceValidation.createService),
-    serviceController.createService
+    getServiceController().createService
   )
   .get(
     auth(PERMISSIONS.SERVICE_READ),
     validate(serviceValidation.getServices),
-    serviceController.getServices
+    getServiceController().getServices
   );
 
 /**
@@ -178,17 +178,17 @@ router
   .get(
     auth(PERMISSIONS.SERVICE_READ),
     validate(serviceValidation.getService),
-    serviceController.getService
+    getServiceController().getService
   )
   .patch(
     auth(PERMISSIONS.SERVICE_UPDATE),
     validate(serviceValidation.updateService),
-    serviceController.updateService
+    getServiceController().updateService
   )
   .delete(
     auth(PERMISSIONS.SERVICE_DELETE),
     validate(serviceValidation.deleteService),
-    serviceController.deleteService
+    getServiceController().deleteService
   );
 
 // ===== PAYMENT METHODS =====
@@ -242,12 +242,12 @@ router
   .post(
     auth(PERMISSIONS.SERVICE_CREATE),
     validate(serviceValidation.createPaymentMethod),
-    serviceController.createPaymentMethod
+    getServiceController().createPaymentMethod
   )
   .get(
     auth(PERMISSIONS.SERVICE_READ),
     validate(serviceValidation.getPaymentMethods),
-    serviceController.getPaymentMethods
+    getServiceController().getPaymentMethods
   );
 
 /**
@@ -328,17 +328,17 @@ router
   .get(
     auth(PERMISSIONS.SERVICE_READ),
     validate(serviceValidation.getPaymentMethod),
-    serviceController.getPaymentMethod
+    getServiceController().getPaymentMethod
   )
   .patch(
     auth(PERMISSIONS.SERVICE_UPDATE),
     validate(serviceValidation.updatePaymentMethod),
-    serviceController.updatePaymentMethod
+    getServiceController().updatePaymentMethod
   )
   .delete(
     auth(PERMISSIONS.SERVICE_DELETE),
     validate(serviceValidation.deletePaymentMethod),
-    serviceController.deletePaymentMethod
+    getServiceController().deletePaymentMethod
   );
 
 export default router;

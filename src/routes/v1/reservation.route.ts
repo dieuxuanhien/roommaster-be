@@ -1,7 +1,7 @@
 import express from 'express';
 import validate from 'middlewares/validate';
 import reservationValidation from 'validations/reservation.validation';
-import { reservationController } from 'controllers';
+import { getReservationController } from '../../core/bootstrap';
 import auth from 'middlewares/auth';
 import { PERMISSIONS } from 'config/roles';
 
@@ -86,12 +86,12 @@ router
   .post(
     auth(PERMISSIONS.RESERVATION_CREATE),
     validate(reservationValidation.createReservation),
-    reservationController.createReservation
+    getReservationController().createReservation
   )
   .get(
     auth(PERMISSIONS.RESERVATION_READ),
     validate(reservationValidation.getReservations),
-    reservationController.getReservations
+    getReservationController().getReservations
   );
 
 /**
@@ -108,7 +108,11 @@ router
  *       "401":
  *         description: Unauthorized
  */
-router.get('/arrivals', auth(PERMISSIONS.RESERVATION_READ), reservationController.getTodayArrivals);
+router.get(
+  '/arrivals',
+  auth(PERMISSIONS.RESERVATION_READ),
+  getReservationController().getTodayArrivals
+);
 
 /**
  * @swagger
@@ -127,7 +131,7 @@ router.get('/arrivals', auth(PERMISSIONS.RESERVATION_READ), reservationControlle
 router.get(
   '/departures',
   auth(PERMISSIONS.RESERVATION_READ),
-  reservationController.getTodayDepartures
+  getReservationController().getTodayDepartures
 );
 
 /**
@@ -194,12 +198,12 @@ router
   .get(
     auth(PERMISSIONS.RESERVATION_READ),
     validate(reservationValidation.getReservation),
-    reservationController.getReservation
+    getReservationController().getReservation
   )
   .patch(
     auth(PERMISSIONS.RESERVATION_UPDATE),
     validate(reservationValidation.updateReservation),
-    reservationController.updateReservation
+    getReservationController().updateReservation
   );
 
 /**
@@ -234,7 +238,7 @@ router.post(
   '/:reservationId/confirm',
   auth(PERMISSIONS.RESERVATION_UPDATE),
   validate(reservationValidation.confirmReservation),
-  reservationController.confirmReservation
+  getReservationController().confirmReservation
 );
 
 /**
@@ -272,7 +276,7 @@ router.post(
   '/:reservationId/cancel',
   auth(PERMISSIONS.RESERVATION_UPDATE),
   validate(reservationValidation.cancelReservation),
-  reservationController.cancelReservation
+  getReservationController().cancelReservation
 );
 
 /**
@@ -310,7 +314,7 @@ router.post(
   '/:reservationId/check-in',
   auth(PERMISSIONS.STAY_RECORD_CREATE),
   validate(reservationValidation.checkInReservation),
-  reservationController.checkInReservation
+  getReservationController().checkInReservation
 );
 
 export default router;

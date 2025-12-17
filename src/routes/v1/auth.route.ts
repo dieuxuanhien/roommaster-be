@@ -1,10 +1,13 @@
 import express from 'express';
 import validate from 'middlewares/validate';
 import authValidation from 'validations/auth.validation';
-import { authController } from 'controllers';
+import { getAuthController } from 'core/bootstrap';
 import auth from 'middlewares/auth';
 
 const router = express.Router();
+
+// Get controller instance from DI container
+const authController = getAuthController();
 
 /**
  * @swagger

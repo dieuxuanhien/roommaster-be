@@ -2,7 +2,7 @@ import express from 'express';
 import auth from '../../middlewares/auth';
 import validate from '../../middlewares/validate';
 import { reportValidation } from '../../validations';
-import { nightlyController } from '../../controllers';
+import { getNightlyController } from '../../core/bootstrap';
 import { PERMISSIONS } from '../../config/roles';
 
 const router = express.Router();
@@ -37,7 +37,7 @@ const router = express.Router();
  *       "403":
  *         description: Forbidden - insufficient permissions
  */
-router.post('/run-all', auth(PERMISSIONS.NIGHTLY_JOB_RUN), nightlyController.runNightlyJobs);
+router.post('/run-all', auth(PERMISSIONS.NIGHTLY_JOB_RUN), getNightlyController().runNightlyJobs);
 
 /**
  * @swagger
@@ -61,7 +61,11 @@ router.post('/run-all', auth(PERMISSIONS.NIGHTLY_JOB_RUN), nightlyController.run
  *       "403":
  *         description: Forbidden
  */
-router.post('/room-charges', auth(PERMISSIONS.NIGHTLY_JOB_RUN), nightlyController.postRoomCharges);
+router.post(
+  '/room-charges',
+  auth(PERMISSIONS.NIGHTLY_JOB_RUN),
+  getNightlyController().postRoomCharges
+);
 
 /**
  * @swagger
@@ -88,7 +92,7 @@ router.post('/room-charges', auth(PERMISSIONS.NIGHTLY_JOB_RUN), nightlyControlle
 router.post(
   '/extra-person-charges',
   auth(PERMISSIONS.NIGHTLY_JOB_RUN),
-  nightlyController.postExtraPersonCharges
+  getNightlyController().postExtraPersonCharges
 );
 
 /**
@@ -113,7 +117,7 @@ router.post(
  *       "403":
  *         description: Forbidden
  */
-router.post('/no-show', auth(PERMISSIONS.NIGHTLY_JOB_RUN), nightlyController.markNoShows);
+router.post('/no-show', auth(PERMISSIONS.NIGHTLY_JOB_RUN), getNightlyController().markNoShows);
 
 /**
  * @swagger
@@ -141,7 +145,7 @@ router.post(
   '/daily-snapshot',
   auth(PERMISSIONS.NIGHTLY_JOB_RUN),
   validate(reportValidation.createSnapshot),
-  nightlyController.createSnapshot
+  getNightlyController().createSnapshot
 );
 
 export default router;

@@ -1,7 +1,7 @@
 import express from 'express';
 import validate from '../../middlewares/validate';
 import housekeepingValidation from '../../validations/housekeeping.validation';
-import { housekeepingController } from '../../controllers';
+import { getHousekeepingController } from '../../core/bootstrap';
 import auth from '../../middlewares/auth';
 import { PERMISSIONS } from '../../config/roles';
 
@@ -74,12 +74,12 @@ router
   .post(
     auth(PERMISSIONS.HOUSEKEEPING_CREATE),
     validate(housekeepingValidation.createHousekeepingLog),
-    housekeepingController.createHousekeepingLog
+    getHousekeepingController().createHousekeepingLog
   )
   .get(
     auth(PERMISSIONS.HOUSEKEEPING_READ),
     validate(housekeepingValidation.getHousekeepingLogs),
-    housekeepingController.getHousekeepingLogs
+    getHousekeepingController().getHousekeepingLogs
   );
 
 /**
@@ -109,7 +109,7 @@ router.get(
   '/pending',
   auth(PERMISSIONS.HOUSEKEEPING_READ),
   validate(housekeepingValidation.getPendingRooms),
-  housekeepingController.getPendingRooms
+  getHousekeepingController().getPendingRooms
 );
 
 /**
@@ -126,7 +126,11 @@ router.get(
  *       "401":
  *         description: Unauthorized
  */
-router.get('/my-tasks', auth(PERMISSIONS.HOUSEKEEPING_READ), housekeepingController.getMyTasks);
+router.get(
+  '/my-tasks',
+  auth(PERMISSIONS.HOUSEKEEPING_READ),
+  getHousekeepingController().getMyTasks
+);
 
 /**
  * @swagger
@@ -155,7 +159,7 @@ router
   .get(
     auth(PERMISSIONS.HOUSEKEEPING_READ),
     validate(housekeepingValidation.getHousekeepingLog),
-    housekeepingController.getHousekeepingLog
+    getHousekeepingController().getHousekeepingLog
   );
 
 /**
@@ -190,7 +194,7 @@ router.post(
   '/:logId/start',
   auth(PERMISSIONS.HOUSEKEEPING_UPDATE),
   validate(housekeepingValidation.startCleaning),
-  housekeepingController.startCleaning
+  getHousekeepingController().startCleaning
 );
 
 /**
@@ -225,7 +229,7 @@ router.post(
   '/:logId/complete',
   auth(PERMISSIONS.HOUSEKEEPING_UPDATE),
   validate(housekeepingValidation.completeCleaning),
-  housekeepingController.completeCleaning
+  getHousekeepingController().completeCleaning
 );
 
 /**
@@ -265,7 +269,7 @@ router.post(
   '/:logId/inspect',
   auth(PERMISSIONS.HOUSEKEEPING_UPDATE),
   validate(housekeepingValidation.inspectRoom),
-  housekeepingController.inspectRoom
+  getHousekeepingController().inspectRoom
 );
 
 /**
@@ -305,7 +309,7 @@ router.post(
   '/:logId/assign',
   auth(PERMISSIONS.HOUSEKEEPING_UPDATE),
   validate(housekeepingValidation.assignHousekeeper),
-  housekeepingController.assignHousekeeper
+  getHousekeepingController().assignHousekeeper
 );
 
 /**
@@ -346,7 +350,7 @@ router.post(
   '/bulk-assign',
   auth(PERMISSIONS.HOUSEKEEPING_UPDATE),
   validate(housekeepingValidation.bulkAssign),
-  housekeepingController.bulkAssign
+  getHousekeepingController().bulkAssign
 );
 
 export default router;

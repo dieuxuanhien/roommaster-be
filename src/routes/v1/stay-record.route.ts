@@ -1,7 +1,7 @@
 import express from 'express';
 import validate from 'middlewares/validate';
 import stayRecordValidation from 'validations/stay-record.validation';
-import { stayRecordController } from 'controllers';
+import { getStayRecordController } from '../../core/bootstrap';
 import auth from 'middlewares/auth';
 import { PERMISSIONS } from 'config/roles';
 
@@ -83,12 +83,12 @@ router
   .post(
     auth(PERMISSIONS.STAY_RECORD_CREATE),
     validate(stayRecordValidation.createStayRecord),
-    stayRecordController.createStayRecord
+    getStayRecordController().createStayRecord
   )
   .get(
     auth(PERMISSIONS.STAY_RECORD_READ),
     validate(stayRecordValidation.getStayRecords),
-    stayRecordController.getStayRecords
+    getStayRecordController().getStayRecords
   );
 
 /**
@@ -105,7 +105,11 @@ router
  *       "401":
  *         description: Unauthorized
  */
-router.get('/guests', auth(PERMISSIONS.STAY_RECORD_READ), stayRecordController.getCurrentGuests);
+router.get(
+  '/guests',
+  auth(PERMISSIONS.STAY_RECORD_READ),
+  getStayRecordController().getCurrentGuests
+);
 
 /**
  * @swagger
@@ -134,7 +138,7 @@ router
   .get(
     auth(PERMISSIONS.STAY_RECORD_READ),
     validate(stayRecordValidation.getStayRecord),
-    stayRecordController.getStayRecord
+    getStayRecordController().getStayRecord
   );
 
 /**
@@ -171,7 +175,7 @@ router.post(
   '/:stayRecordId/check-out',
   auth(PERMISSIONS.STAY_RECORD_UPDATE),
   validate(stayRecordValidation.checkOut),
-  stayRecordController.checkOut
+  getStayRecordController().checkOut
 );
 
 /**
@@ -206,7 +210,7 @@ router.post(
   '/details/:stayDetailId/check-out',
   auth(PERMISSIONS.STAY_RECORD_UPDATE),
   validate(stayRecordValidation.checkOutRoom),
-  stayRecordController.checkOutRoom
+  getStayRecordController().checkOutRoom
 );
 
 /**
@@ -246,7 +250,7 @@ router.post(
   '/details/:stayDetailId/move',
   auth(PERMISSIONS.STAY_RECORD_UPDATE),
   validate(stayRecordValidation.moveRoom),
-  stayRecordController.moveRoom
+  getStayRecordController().moveRoom
 );
 
 /**
@@ -287,7 +291,7 @@ router.post(
   '/details/:stayDetailId/extend',
   auth(PERMISSIONS.STAY_RECORD_UPDATE),
   validate(stayRecordValidation.extendStay),
-  stayRecordController.extendStay
+  getStayRecordController().extendStay
 );
 
 /**
@@ -327,7 +331,7 @@ router.post(
   '/details/:stayDetailId/guests',
   auth(PERMISSIONS.STAY_RECORD_UPDATE),
   validate(stayRecordValidation.addGuestToRoom),
-  stayRecordController.addGuest
+  getStayRecordController().addGuest
 );
 
 export default router;

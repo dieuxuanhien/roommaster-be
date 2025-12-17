@@ -1,11 +1,14 @@
 import express from 'express';
 import validate from 'middlewares/validate';
 import employeeValidation from 'validations/employee.validation';
-import { employeeController } from 'controllers';
+import { getEmployeeController } from 'core/bootstrap';
 import auth from 'middlewares/auth';
 import { PERMISSIONS } from 'config/roles';
 
 const router = express.Router();
+
+// Get controller instance from DI container
+const employeeController = getEmployeeController();
 
 /**
  * @swagger

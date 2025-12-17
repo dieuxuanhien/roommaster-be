@@ -1,7 +1,7 @@
 import express from 'express';
 import validate from 'middlewares/validate';
 import folioValidation from 'validations/folio.validation';
-import { folioController } from 'controllers';
+import { getFolioController } from 'core/bootstrap';
 import auth from 'middlewares/auth';
 import { PERMISSIONS } from 'config/roles';
 
@@ -72,12 +72,12 @@ router
   .post(
     auth(PERMISSIONS.FOLIO_CREATE),
     validate(folioValidation.createGuestFolio),
-    folioController.createFolio
+    getFolioController().createFolio
   )
   .get(
     auth(PERMISSIONS.FOLIO_READ),
     validate(folioValidation.getGuestFolios),
-    folioController.getFolios
+    getFolioController().getFolios
   );
 
 /**
@@ -134,12 +134,12 @@ router
   .get(
     auth(PERMISSIONS.FOLIO_READ),
     validate(folioValidation.getGuestFolio),
-    folioController.getFolio
+    getFolioController().getFolio
   )
   .patch(
     auth(PERMISSIONS.FOLIO_UPDATE),
     validate(folioValidation.updateGuestFolio),
-    folioController.updateFolio
+    getFolioController().updateFolio
   );
 
 /**
@@ -166,7 +166,7 @@ router.get(
   '/:folioId/summary',
   auth(PERMISSIONS.FOLIO_READ),
   validate(folioValidation.getFolioSummary),
-  folioController.getFolioSummary
+  getFolioController().getFolioSummary
 );
 
 /**
@@ -201,7 +201,7 @@ router.post(
   '/:folioId/close',
   auth(PERMISSIONS.FOLIO_UPDATE),
   validate(folioValidation.closeFolio),
-  folioController.closeFolio
+  getFolioController().closeFolio
 );
 
 // ===== CHARGES =====
@@ -249,7 +249,7 @@ router.post(
   '/:folioId/room-charges',
   auth(PERMISSIONS.FOLIO_UPDATE),
   validate(folioValidation.addRoomCharge),
-  folioController.addRoomCharge
+  getFolioController().addRoomCharge
 );
 
 /**
@@ -295,7 +295,7 @@ router.post(
   '/:folioId/service-charges',
   auth(PERMISSIONS.FOLIO_UPDATE),
   validate(folioValidation.addServiceCharge),
-  folioController.addServiceCharge
+  getFolioController().addServiceCharge
 );
 
 // ===== PAYMENTS =====
@@ -343,7 +343,7 @@ router.post(
   '/:folioId/payments',
   auth(PERMISSIONS.PAYMENT_CREATE),
   validate(folioValidation.addPayment),
-  folioController.addPayment
+  getFolioController().addPayment
 );
 
 /**
@@ -387,7 +387,7 @@ router.post(
   '/:folioId/deposits',
   auth(PERMISSIONS.PAYMENT_CREATE),
   validate(folioValidation.addDeposit),
-  folioController.addDeposit
+  getFolioController().addDeposit
 );
 
 /**
@@ -430,7 +430,7 @@ router.post(
   '/:folioId/refunds',
   auth(PERMISSIONS.PAYMENT_CREATE),
   validate(folioValidation.addRefund),
-  folioController.addRefund
+  getFolioController().addRefund
 );
 
 /**
@@ -473,7 +473,7 @@ router.post(
   '/:folioId/discounts',
   auth(PERMISSIONS.FOLIO_UPDATE),
   validate(folioValidation.addDiscount),
-  folioController.addDiscount
+  getFolioController().addDiscount
 );
 
 /**
@@ -508,7 +508,7 @@ router.post(
   '/transactions/:transactionId/void',
   auth(PERMISSIONS.FOLIO_UPDATE),
   validate(folioValidation.voidTransaction),
-  folioController.voidTransaction
+  getFolioController().voidTransaction
 );
 
 export default router;

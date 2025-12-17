@@ -2,82 +2,81 @@ import httpStatus from 'http-status';
 import pick from 'utils/pick';
 import ApiError from 'utils/ApiError';
 import catchAsync from 'utils/catchAsync';
-import { serviceService } from 'services';
+import ServiceService from 'services/service.service';
+import { Injectable } from 'core/decorators';
 
 // Service Controllers
-const createService = catchAsync(async (req, res) => {
-  const service = await serviceService.createService(req.body);
-  res.status(httpStatus.CREATED).send(service);
-});
 
-const getServices = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'serviceGroup', 'isActive']);
-  const options = pick(req.query, ['sortBy', 'sortType', 'limit', 'page']);
-  const result = await serviceService.queryServices(filter, options);
-  res.send(result);
-});
+@Injectable()
+export class ServiceController {
+  constructor(private readonly serviceService: ServiceService) {}
 
-const getService = catchAsync(async (req, res) => {
-  const service = await serviceService.getServiceById(Number(req.params.serviceId));
-  if (!service) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Service not found');
-  }
-  res.send(service);
-});
+  createService = catchAsync(async (req, res) => {
+    const service = await this.serviceService.createService(req.body);
+    res.status(httpStatus.CREATED).send(service);
+  });
 
-const updateService = catchAsync(async (req, res) => {
-  const service = await serviceService.updateServiceById(Number(req.params.serviceId), req.body);
-  res.send(service);
-});
+  getServices = catchAsync(async (req, res) => {
+    const filter = pick(req.query, ['name', 'serviceGroup', 'isActive']);
+    const options = pick(req.query, ['sortBy', 'sortType', 'limit', 'page']);
+    const result = await this.serviceService.queryServices(filter, options);
+    res.send(result);
+  });
 
-const deleteService = catchAsync(async (req, res) => {
-  await serviceService.deleteServiceById(Number(req.params.serviceId));
-  res.status(httpStatus.NO_CONTENT).send();
-});
+  getService = catchAsync(async (req, res) => {
+    const service = await this.serviceService.getServiceById(Number(req.params.serviceId));
+    if (!service) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Service not found');
+    }
+    res.send(service);
+  });
 
-// Payment Method Controllers
-const createPaymentMethod = catchAsync(async (req, res) => {
-  const method = await serviceService.createPaymentMethod(req.body);
-  res.status(httpStatus.CREATED).send(method);
-});
+  updateService = catchAsync(async (req, res) => {
+    const service = await this.serviceService.updateServiceById(
+      Number(req.params.serviceId),
+      req.body
+    );
+    res.send(service);
+  });
 
-const getPaymentMethods = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'isActive']);
-  const options = pick(req.query, ['sortBy', 'sortType', 'limit', 'page']);
-  const result = await serviceService.queryPaymentMethods(filter, options);
-  res.send(result);
-});
+  deleteService = catchAsync(async (req, res) => {
+    await this.serviceService.deleteServiceById(Number(req.params.serviceId));
+    res.status(httpStatus.NO_CONTENT).send();
+  });
 
-const getPaymentMethod = catchAsync(async (req, res) => {
-  const method = await serviceService.getPaymentMethodById(Number(req.params.methodId));
-  if (!method) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Payment method not found');
-  }
-  res.send(method);
-});
+  // Payment Method Controllers
+  createPaymentMethod = catchAsync(async (req, res) => {
+    const method = await this.serviceService.createPaymentMethod(req.body);
+    res.status(httpStatus.CREATED).send(method);
+  });
 
-const updatePaymentMethod = catchAsync(async (req, res) => {
-  const method = await serviceService.updatePaymentMethodById(
-    Number(req.params.methodId),
-    req.body
-  );
-  res.send(method);
-});
+  getPaymentMethods = catchAsync(async (req, res) => {
+    const filter = pick(req.query, ['name', 'isActive']);
+    const options = pick(req.query, ['sortBy', 'sortType', 'limit', 'page']);
+    const result = await this.serviceService.queryPaymentMethods(filter, options);
+    res.send(result);
+  });
 
-const deletePaymentMethod = catchAsync(async (req, res) => {
-  await serviceService.deletePaymentMethodById(Number(req.params.methodId));
-  res.status(httpStatus.NO_CONTENT).send();
-});
+  getPaymentMethod = catchAsync(async (req, res) => {
+    const method = await this.serviceService.getPaymentMethodById(Number(req.params.methodId));
+    if (!method) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Payment method not found');
+    }
+    res.send(method);
+  });
 
-export default {
-  createService,
-  getServices,
-  getService,
-  updateService,
-  deleteService,
-  createPaymentMethod,
-  getPaymentMethods,
-  getPaymentMethod,
-  updatePaymentMethod,
-  deletePaymentMethod
-};
+  updatePaymentMethod = catchAsync(async (req, res) => {
+    const method = await this.serviceService.updatePaymentMethodById(
+      Number(req.params.methodId),
+      req.body
+    );
+    res.send(method);
+  });
+
+  deletePaymentMethod = catchAsync(async (req, res) => {
+    await this.serviceService.deletePaymentMethodById(Number(req.params.methodId));
+    res.status(httpStatus.NO_CONTENT).send();
+  });
+}
+
+export default ServiceController;

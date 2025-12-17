@@ -1,53 +1,54 @@
 import httpStatus from 'http-status';
 import { Request, Response } from 'express';
 import catchAsync from '../utils/catchAsync';
-import { customerTierService } from '../services';
+import CustomerTierService from '../services/customer-tier.service';
 import pick from '../utils/pick';
+import { Injectable } from 'core/decorators';
 
-const createCustomerTier = catchAsync(async (req: Request, res: Response) => {
-  const tier = await customerTierService.createCustomerTier(req.body);
-  res.status(httpStatus.CREATED).send(tier);
-});
+@Injectable()
+export class CustomerTierController {
+  constructor(private readonly customerTierService: CustomerTierService) {}
 
-const getCustomerTiers = catchAsync(async (req: Request, res: Response) => {
-  const filter = pick(req.query, ['name', 'sortBy', 'sortType', 'limit', 'page']);
-  const result = await customerTierService.queryCustomerTiers(filter);
-  res.send(result);
-});
+  createCustomerTier = catchAsync(async (req: Request, res: Response) => {
+    const tier = await this.customerTierService.createCustomerTier(req.body);
+    res.status(httpStatus.CREATED).send(tier);
+  });
 
-const getCustomerTier = catchAsync(async (req: Request, res: Response) => {
-  const tier = await customerTierService.getCustomerTierById(Number(req.params.tierId));
-  res.send(tier);
-});
+  getCustomerTiers = catchAsync(async (req: Request, res: Response) => {
+    const filter = pick(req.query, ['name', 'sortBy', 'sortType', 'limit', 'page']);
+    const result = await this.customerTierService.queryCustomerTiers(filter);
+    res.send(result);
+  });
 
-const updateCustomerTier = catchAsync(async (req: Request, res: Response) => {
-  const tier = await customerTierService.updateCustomerTier(Number(req.params.tierId), req.body);
-  res.send(tier);
-});
+  getCustomerTier = catchAsync(async (req: Request, res: Response) => {
+    const tier = await this.customerTierService.getCustomerTierById(Number(req.params.tierId));
+    res.send(tier);
+  });
 
-const deleteCustomerTier = catchAsync(async (req: Request, res: Response) => {
-  await customerTierService.deleteCustomerTier(Number(req.params.tierId));
-  res.status(httpStatus.NO_CONTENT).send();
-});
+  updateCustomerTier = catchAsync(async (req: Request, res: Response) => {
+    const tier = await this.customerTierService.updateCustomerTier(
+      Number(req.params.tierId),
+      req.body
+    );
+    res.send(tier);
+  });
 
-const checkUpgrade = catchAsync(async (req: Request, res: Response) => {
-  const result = await customerTierService.checkAndUpgradeCustomerTier(
-    Number(req.params.customerId)
-  );
-  res.send(result);
-});
+  deleteCustomerTier = catchAsync(async (req: Request, res: Response) => {
+    await this.customerTierService.deleteCustomerTier(Number(req.params.tierId));
+    res.status(httpStatus.NO_CONTENT).send();
+  });
 
-const batchUpgrade = catchAsync(async (req: Request, res: Response) => {
-  const result = await customerTierService.batchUpgradeCustomerTiers();
-  res.send(result);
-});
+  checkUpgrade = catchAsync(async (req: Request, res: Response) => {
+    const result = await this.customerTierService.checkAndUpgradeCustomerTier(
+      Number(req.params.customerId)
+    );
+    res.send(result);
+  });
 
-export default {
-  createCustomerTier,
-  getCustomerTiers,
-  getCustomerTier,
-  updateCustomerTier,
-  deleteCustomerTier,
-  checkUpgrade,
-  batchUpgrade
-};
+  batchUpgrade = catchAsync(async (req: Request, res: Response) => {
+    const result = await this.customerTierService.batchUpgradeCustomerTiers();
+    res.send(result);
+  });
+}
+
+export default CustomerTierController;

@@ -2,7 +2,7 @@ import express from 'express';
 import auth from '../../middlewares/auth';
 import validate from '../../middlewares/validate';
 import { inspectionValidation } from '../../validations';
-import { inspectionController } from '../../controllers';
+import { getInspectionController } from '../../core/bootstrap';
 import { PERMISSIONS } from '../../config/roles';
 
 const router = express.Router();
@@ -95,21 +95,21 @@ router.post(
   '/:stayDetailId',
   auth(PERMISSIONS.INSPECTION_CREATE),
   validate(inspectionValidation.createInspection),
-  inspectionController.createInspection
+  getInspectionController().createInspection
 );
 
 router.get(
   '/:stayDetailId',
   auth(PERMISSIONS.INSPECTION_READ),
   validate(inspectionValidation.getInspection),
-  inspectionController.getInspection
+  getInspectionController().getInspection
 );
 
 router.patch(
   '/:stayDetailId',
   auth(PERMISSIONS.INSPECTION_UPDATE),
   validate(inspectionValidation.updateInspection),
-  inspectionController.updateInspection
+  getInspectionController().updateInspection
 );
 
 /**
@@ -136,7 +136,7 @@ router.get(
   '/:stayDetailId/can-checkout',
   auth(PERMISSIONS.INSPECTION_READ),
   validate(inspectionValidation.canCheckout),
-  inspectionController.canCheckout
+  getInspectionController().canCheckout
 );
 
 export default router;
