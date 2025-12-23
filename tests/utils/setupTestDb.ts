@@ -7,12 +7,10 @@ const setupTestDB = () => {
   });
 
   beforeEach(async () => {
-    await prisma.token.deleteMany();
     await prisma.employee.deleteMany();
   });
 
   afterAll(async () => {
-    await prisma.token.deleteMany();
     await prisma.employee.deleteMany();
     await prisma.$disconnect();
   });

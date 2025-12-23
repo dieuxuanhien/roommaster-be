@@ -15,9 +15,9 @@ const jwtVerify: VerifyCallback = async (payload, done) => {
     const employee = await prisma.employee.findUnique({
       select: {
         id: true,
-        email: true,
+        username: true,
         name: true,
-        userGroupId: true
+        role: true
       },
       where: { id: payload.sub }
     });
