@@ -4,6 +4,7 @@ import compression from 'compression';
 import cors from 'cors';
 import passport from 'passport';
 import httpStatus from 'http-status';
+import swaggerUi from 'swagger-ui-express';
 import config from './config/env';
 import morgan from './config/morgan';
 import xss from './middlewares/xss';
@@ -12,6 +13,7 @@ import { authLimiter } from './middlewares/rateLimiter';
 import { errorConverter, errorHandler } from './middlewares/error';
 import ApiError from './utils/ApiError';
 import { bootstrap } from './core/bootstrap';
+import swaggerSpec from './config/swagger';
 
 // Bootstrap DI container - must be called before routes are loaded
 bootstrap();
@@ -58,6 +60,17 @@ passport.use('jwt', jwtStrategy);
 if (config.env === 'production') {
   app.use('/v1/auth', authLimiter);
 }
+
+// Swagger API documentation
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    explorer: true,
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Roommaster API Documentation'
+  })
+);
 
 // v1 api routes
 app.use('/v1', routes);

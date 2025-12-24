@@ -38,3 +38,13 @@ export const decimalNumber: Joi.CustomValidator<string> = (value, helpers) => {
   }
   return value;
 };
+
+// Pagination validators
+export const page = Joi.number().integer().min(1).default(1);
+
+export const perPage = Joi.number().integer().min(1).max(100).default(10);
+
+export const paginationQuery = {
+  page: page.optional(),
+  perPage: perPage.optional()
+};

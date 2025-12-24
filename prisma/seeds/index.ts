@@ -1,6 +1,28 @@
-const main = () => {
-  console.log('Start seed');
+import { PrismaClient } from '@prisma/client';
+import { seedEmployees } from './employee.seed';
+import { seedCustomers } from './customer.seed';
+
+const prisma = new PrismaClient();
+
+const main = async () => {
+  console.log('🌱 Starting seed...');
+
+  try {
+    await seedEmployees(prisma);
+    await seedCustomers(prisma);
+
+    console.log('✅ Seed completed successfully!');
+  } catch (error) {
+    console.error('❌ Error during seeding:', error);
+    throw error;
+  }
 };
 
-main();
-process.exit(0);
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

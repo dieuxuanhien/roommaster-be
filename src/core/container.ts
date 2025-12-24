@@ -118,38 +118,9 @@ export const TOKENS = {
   PrismaClient: Symbol('PrismaClient'),
   AuthService: Symbol('AuthService'),
   TokenService: Symbol('TokenService'),
-  EmailService: Symbol('EmailService'),
   EmployeeService: Symbol('EmployeeService'),
   CustomerService: Symbol('CustomerService'),
-  RoomService: Symbol('RoomService'),
-  ReservationService: Symbol('ReservationService'),
-  StayRecordService: Symbol('StayRecordService'),
-  FolioService: Symbol('FolioService'),
-  ServiceService: Symbol('ServiceService'),
-  HousekeepingService: Symbol('HousekeepingService'),
-  InvoiceService: Symbol('InvoiceService'),
-  InspectionService: Symbol('InspectionService'),
-  CustomerTierService: Symbol('CustomerTierService'),
-  ShiftService: Symbol('ShiftService'),
-  NightlyService: Symbol('NightlyService'),
-  ReportService: Symbol('ReportService'),
-
-  // Controllers
-  AuthController: Symbol('AuthController'),
-  EmployeeController: Symbol('EmployeeController'),
-  CustomerController: Symbol('CustomerController'),
-  RoomController: Symbol('RoomController'),
-  ReservationController: Symbol('ReservationController'),
-  StayRecordController: Symbol('StayRecordController'),
-  FolioController: Symbol('FolioController'),
-  ServiceController: Symbol('ServiceController'),
-  HousekeepingController: Symbol('HousekeepingController'),
-  InvoiceController: Symbol('InvoiceController'),
-  InspectionController: Symbol('InspectionController'),
-  CustomerTierController: Symbol('CustomerTierController'),
-  ShiftController: Symbol('ShiftController'),
-  NightlyController: Symbol('NightlyController'),
-  ReportController: Symbol('ReportController')
+  BookingService: Symbol('BookingService')
 } as const;
 
 export type TokenKey = keyof typeof TOKENS;
