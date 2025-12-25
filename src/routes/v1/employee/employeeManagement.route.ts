@@ -4,7 +4,7 @@ import validate from 'middlewares/validate';
 import { employeeValidation } from 'validations';
 import { container, TOKENS } from 'core/container';
 import { EmployeeService } from 'services';
-import { EmployeeManagementController } from 'controllers/employee/employeeManagement.controller';
+import { EmployeeManagementController } from 'controllers/employee/employee.employeeManagement.controller';
 
 const employeeManagementRoute = express.Router();
 

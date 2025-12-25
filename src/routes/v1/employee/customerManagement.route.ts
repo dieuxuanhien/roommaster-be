@@ -4,7 +4,7 @@ import validate from 'middlewares/validate';
 import { customerValidation } from 'validations';
 import { container, TOKENS } from 'core/container';
 import { CustomerService } from 'services';
-import { CustomerManagementController } from 'controllers/employee/customerManagement.controller';
+import { CustomerManagementController } from 'controllers/employee/employee.customerManagement.controller';
 
 const customerManagementRoute = express.Router();
 

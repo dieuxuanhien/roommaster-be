@@ -4,7 +4,7 @@ import validate from 'middlewares/validate';
 import { roomTypeValidation } from 'validations';
 import { container, TOKENS } from 'core/container';
 import { RoomTypeService } from 'services';
-import { RoomTypeController } from 'controllers/employee/roomType.controller';
+import { RoomTypeController } from 'controllers/employee/employee.roomType.controller';
 
 const roomTypeRoute = express.Router();
 
