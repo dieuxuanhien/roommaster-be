@@ -4,20 +4,20 @@ import { Injectable } from 'core/decorators';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from 'utils/catchAsync';
-import { HotelServiceService } from 'services';
+import { ServiceService } from 'services';
 import { sendData, sendNoContent } from 'utils/responseWrapper';
 import pick from 'utils/pick';
 
 @Injectable()
-export class HotelServiceController {
-  constructor(private readonly hotelServiceService: HotelServiceService) {}
+export class ServiceController {
+  constructor(private readonly ServiceService: ServiceService) {}
 
-  createHotelService = catchAsync(async (req: Request, res: Response) => {
-    const service = await this.hotelServiceService.createHotelService(req.body);
+  createService = catchAsync(async (req: Request, res: Response) => {
+    const service = await this.ServiceService.createService(req.body);
     sendData(res, service, httpStatus.CREATED);
   });
 
-  getHotelServices = catchAsync(async (req: Request, res: Response) => {
+  getServices = catchAsync(async (req: Request, res: Response) => {
     const filters = pick(req.query, ['search', 'isActive', 'minPrice', 'maxPrice']);
     const options = pick(req.query, ['page', 'limit', 'sortBy', 'sortOrder']);
 
@@ -30,27 +30,24 @@ export class HotelServiceController {
     if (options.page) options.page = Number(options.page);
     if (options.limit) options.limit = Number(options.limit);
 
-    const result = await this.hotelServiceService.getAllHotelServices(filters, options);
+    const result = await this.ServiceService.getAllServices(filters, options);
     sendData(res, result);
   });
 
-  getHotelService = catchAsync(async (req: Request, res: Response) => {
-    const service = await this.hotelServiceService.getHotelServiceById(req.params.serviceId);
+  getService = catchAsync(async (req: Request, res: Response) => {
+    const service = await this.ServiceService.getServiceById(req.params.serviceId);
     sendData(res, service);
   });
 
-  updateHotelService = catchAsync(async (req: Request, res: Response) => {
-    const service = await this.hotelServiceService.updateHotelService(
-      req.params.serviceId,
-      req.body
-    );
+  updateService = catchAsync(async (req: Request, res: Response) => {
+    const service = await this.ServiceService.updateService(req.params.serviceId, req.body);
     sendData(res, service);
   });
 
-  deleteHotelService = catchAsync(async (req: Request, res: Response) => {
-    await this.hotelServiceService.deleteHotelService(req.params.serviceId);
+  deleteService = catchAsync(async (req: Request, res: Response) => {
+    await this.ServiceService.deleteService(req.params.serviceId);
     sendNoContent(res);
   });
 }
 
-export default HotelServiceController;
+export default ServiceController;
