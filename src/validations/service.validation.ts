@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-const createHotelService = {
+const createService = {
   body: Joi.object().keys({
     name: Joi.string().required().max(100),
     price: Joi.number().min(0).required(),
@@ -9,7 +9,7 @@ const createHotelService = {
   })
 };
 
-const getHotelServices = {
+const getServices = {
   query: Joi.object().keys({
     search: Joi.string().optional(),
     isActive: Joi.boolean().optional(),
@@ -24,13 +24,13 @@ const getHotelServices = {
   })
 };
 
-const getHotelService = {
+const getService = {
   params: Joi.object().keys({
     serviceId: Joi.string().required()
   })
 };
 
-const updateHotelService = {
+const updateService = {
   params: Joi.object().keys({
     serviceId: Joi.string().required()
   }),
@@ -44,16 +44,16 @@ const updateHotelService = {
     .min(1)
 };
 
-const deleteHotelService = {
+const deleteService = {
   params: Joi.object().keys({
     serviceId: Joi.string().required()
   })
 };
 
 export default {
-  createHotelService,
-  getHotelServices,
-  getHotelService,
-  updateHotelService,
-  deleteHotelService
+  createService,
+  getServices,
+  getService,
+  updateService,
+  deleteService
 };

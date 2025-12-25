@@ -123,7 +123,7 @@ export const TOKENS = {
   BookingService: Symbol('BookingService'),
   RoomTypeService: Symbol('RoomTypeService'),
   RoomService: Symbol('RoomService'),
-  HotelServiceService: Symbol('HotelServiceService')
+  ServiceService: Symbol('ServiceService')
 } as const;
 
 export type TokenKey = keyof typeof TOKENS;

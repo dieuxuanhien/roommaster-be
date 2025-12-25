@@ -4,7 +4,7 @@ import profileRoute from './profile.route';
 import bookingRoute from './booking.route';
 import roomTypeRoute from './roomType.route';
 import roomRoute from './room.route';
-import hotelServiceRoute from './hotelService.route';
+import serviceRoute from './service.route';
 import employeeManagementRoute from './employeeManagement.route';
 import customerManagementRoute from './customerManagement.route';
 
@@ -15,7 +15,7 @@ employeeRoute.use('/profile', profileRoute);
 employeeRoute.use('/bookings', bookingRoute);
 employeeRoute.use('/room-types', roomTypeRoute);
 employeeRoute.use('/rooms', roomRoute);
-employeeRoute.use('/services', hotelServiceRoute);
+employeeRoute.use('/services', serviceRoute);
 employeeRoute.use('/employees', employeeManagementRoute);
 employeeRoute.use('/customers', customerManagementRoute);
 

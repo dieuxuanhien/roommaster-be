@@ -10,10 +10,10 @@ import pick from 'utils/pick';
 
 @Injectable()
 export class ServiceController {
-  constructor(private readonly ServiceService: ServiceService) {}
+  constructor(private readonly serviceService: ServiceService) {}
 
   createService = catchAsync(async (req: Request, res: Response) => {
-    const service = await this.ServiceService.createService(req.body);
+    const service = await this.serviceService.createService(req.body);
     sendData(res, service, httpStatus.CREATED);
   });
 
@@ -30,22 +30,22 @@ export class ServiceController {
     if (options.page) options.page = Number(options.page);
     if (options.limit) options.limit = Number(options.limit);
 
-    const result = await this.ServiceService.getAllServices(filters, options);
+    const result = await this.serviceService.getAllServices(filters, options);
     sendData(res, result);
   });
 
   getService = catchAsync(async (req: Request, res: Response) => {
-    const service = await this.ServiceService.getServiceById(req.params.serviceId);
+    const service = await this.serviceService.getServiceById(req.params.serviceId);
     sendData(res, service);
   });
 
   updateService = catchAsync(async (req: Request, res: Response) => {
-    const service = await this.ServiceService.updateService(req.params.serviceId, req.body);
+    const service = await this.serviceService.updateService(req.params.serviceId, req.body);
     sendData(res, service);
   });
 
   deleteService = catchAsync(async (req: Request, res: Response) => {
-    await this.ServiceService.deleteService(req.params.serviceId);
+    await this.serviceService.deleteService(req.params.serviceId);
     sendNoContent(res);
   });
 }

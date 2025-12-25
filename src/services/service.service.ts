@@ -3,21 +3,21 @@ import { Injectable } from 'core/decorators';
 import httpStatus from 'http-status';
 import ApiError from 'utils/ApiError';
 
-export interface CreateHotelServiceData {
+export interface CreateServiceData {
   name: string;
   price: number;
   unit?: string;
   isActive?: boolean;
 }
 
-export interface UpdateHotelServiceData {
+export interface UpdateServiceData {
   name?: string;
   price?: number;
   unit?: string;
   isActive?: boolean;
 }
 
-export interface HotelServiceFilters {
+export interface ServiceFilters {
   search?: string;
   isActive?: boolean;
   minPrice?: number;
@@ -32,15 +32,15 @@ export interface PaginationOptions {
 }
 
 @Injectable()
-export class HotelServiceService {
+export class ServiceService {
   constructor(private readonly prisma: PrismaClient) {}
 
   /**
-   * Create a new hotel service
-   * @param {CreateHotelServiceData} serviceData - Service data
+   * Create a new service
+   * @param {CreateServiceData} serviceData - Service data
    * @returns {Promise<Service>} Created service
    */
-  async createHotelService(serviceData: CreateHotelServiceData): Promise<Service> {
+  async createService(serviceData: CreateServiceData): Promise<Service> {
     // Check if service with same name already exists
     const existingService = await this.prisma.service.findFirst({
       where: { name: serviceData.name }
@@ -63,13 +63,13 @@ export class HotelServiceService {
   }
 
   /**
-   * Get all hotel services with filters and pagination
-   * @param {HotelServiceFilters} filters - Filter options
+   * Get all services with filters and pagination
+   * @param {ServiceFilters} filters - Filter options
    * @param {PaginationOptions} options - Pagination options
    * @returns {Promise<{ data: Service[]; total: number; page: number; limit: number }>}
    */
-  async getAllHotelServices(
-    filters: HotelServiceFilters = {},
+  async getAllServices(
+    filters: ServiceFilters = {},
     options: PaginationOptions = {}
   ): Promise<{ data: Service[]; total: number; page: number; limit: number }> {
     const { search, isActive, minPrice, maxPrice } = filters;
@@ -129,11 +129,11 @@ export class HotelServiceService {
   }
 
   /**
-   * Get hotel service by ID
+   * Get service by ID
    * @param {string} serviceId - Service ID
    * @returns {Promise<Service>} Service
    */
-  async getHotelServiceById(serviceId: string): Promise<Service> {
+  async getServiceById(serviceId: string): Promise<Service> {
     const service = await this.prisma.service.findUnique({
       where: { id: serviceId },
       include: {
@@ -153,16 +153,13 @@ export class HotelServiceService {
   }
 
   /**
-   * Update hotel service by ID
+   * Update service by ID
    * @param {string} serviceId - Service ID
-   * @param {UpdateHotelServiceData} updateData - Update data
+   * @param {UpdateServiceData} updateData - Update data
    * @returns {Promise<Service>} Updated service
    */
-  async updateHotelService(
-    serviceId: string,
-    updateData: UpdateHotelServiceData
-  ): Promise<Service> {
-    await this.getHotelServiceById(serviceId);
+  async updateService(serviceId: string, updateData: UpdateServiceData): Promise<Service> {
+    await this.getServiceById(serviceId);
 
     // Check if updating name to an existing name
     if (updateData.name) {
@@ -187,12 +184,12 @@ export class HotelServiceService {
   }
 
   /**
-   * Delete hotel service by ID
+   * Delete service by ID
    * @param {string} serviceId - Service ID
    * @returns {Promise<void>}
    */
-  async deleteHotelService(serviceId: string): Promise<void> {
-    await this.getHotelServiceById(serviceId);
+  async deleteService(serviceId: string): Promise<void> {
+    await this.getServiceById(serviceId);
 
     // Check if service has associated service usages
     const usageCount = await this.prisma.serviceUsage.count({
@@ -212,4 +209,4 @@ export class HotelServiceService {
   }
 }
 
-export default HotelServiceService;
+export default ServiceService;

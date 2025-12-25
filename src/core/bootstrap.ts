@@ -14,7 +14,7 @@ import {
   BookingService,
   RoomTypeService,
   RoomService,
-  HotelServiceService
+  ServiceService
 } from 'services';
 
 /**
@@ -62,8 +62,8 @@ export function bootstrap(): void {
   );
 
   container.registerFactory(
-    TOKENS.HotelServiceService,
-    (...args: unknown[]) => new HotelServiceService(args[0] as PrismaClient),
+    TOKENS.ServiceService,
+    (...args: unknown[]) => new ServiceService(args[0] as PrismaClient),
     [TOKENS.PrismaClient]
   );
 
