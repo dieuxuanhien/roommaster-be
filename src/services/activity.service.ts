@@ -217,6 +217,12 @@ export class ActivityService {
         return 'Checked in';
       case ActivityType.CHECKED_OUT:
         return 'Checked out';
+      case ActivityType.CREATE_PROMOTION:
+        return 'Promotion created';
+      case ActivityType.UPDATE_PROMOTION:
+        return 'Promotion updated';
+      case ActivityType.CLAIM_PROMOTION:
+        return 'Promotion claimed';
       default:
         return 'Activity recorded';
     }
