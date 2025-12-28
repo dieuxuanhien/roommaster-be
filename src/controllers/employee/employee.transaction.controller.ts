@@ -5,7 +5,7 @@ import { Injectable } from 'core/decorators';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from 'utils/catchAsync';
-import { TransactionService } from 'services/transaction.service';
+import { TransactionService } from 'services/transaction';
 import { sendData } from 'utils/responseWrapper';
 
 @Injectable()
@@ -21,6 +21,11 @@ export class EmployeeTransactionController {
    * 2. Split room payment: { bookingId, bookingRoomIds }
    * 3. Service payment (booking): { bookingId, serviceUsageId }
    * 4. Service payment (standalone): { serviceUsageId }
+   *
+   * Promotion Applications:
+   * - Transaction-level: { customerPromotionId }
+   * - Room-specific: { customerPromotionId, bookingRoomId }
+   * - Service-specific: { customerPromotionId, serviceUsageId }
    */
   createTransaction = catchAsync(async (req: Request, res: Response) => {
     if (!req.employee?.id) {
@@ -31,22 +36,22 @@ export class EmployeeTransactionController {
       bookingId,
       bookingRoomIds,
       serviceUsageId,
-      amount,
       paymentMethod,
       transactionType,
       transactionRef,
-      description
+      description,
+      promotionApplications
     } = req.body;
 
     const result = await this.transactionService.createTransaction({
       bookingId,
       bookingRoomIds,
       serviceUsageId,
-      amount,
       paymentMethod,
       transactionType,
       transactionRef,
       description,
+      promotionApplications,
       employeeId: req.employee.id
     });
 

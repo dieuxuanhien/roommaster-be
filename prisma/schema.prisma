@@ -21,6 +21,9 @@ enum ActivityType {
   CREATE_CUSTOMER
   CHECKED_IN
   CHECKED_OUT
+  CREATE_PROMOTION
+  UPDATE_PROMOTION
+  CLAIM_PROMOTION
 }
 
 enum ServiceUsageStatus {
@@ -70,6 +73,23 @@ enum TransactionType {
   ADJUSTMENT
 }
 
+enum PromotionScope {
+  ROOM
+  SERVICE
+  ALL
+}
+
+enum PromotionType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+enum CustomerPromotionStatus {
+  AVAILABLE
+  USED
+  EXPIRED
+}
+
 // ==================== MODELS ====================
 
 model Employee {
@@ -98,9 +118,10 @@ model Customer {
   bookings         Booking[]
   bookingCustomers BookingCustomer[]
 
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  activities Activity[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  activities         Activity[]
+  customerPromotions CustomerPromotion[]
 
   @@index([phone])
 }
@@ -225,8 +246,12 @@ model Transaction {
   id        String  @id @default(cuid())
   bookingId String?
 
-  type   TransactionType
-  amount Decimal           @default(0) @db.Decimal(10, 2)
+  type TransactionType
+
+  baseAmount     Decimal @db.Decimal(10, 2)
+  discountAmount Decimal @db.Decimal(10, 2)
+  amount         Decimal @db.Decimal(10, 2)
+
   method PaymentMethod?
   status TransactionStatus @default(PENDING)
 
@@ -243,7 +268,8 @@ model Transaction {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  booking Booking? @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  booking        Booking?        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  usedPromotions UsedPromotion[]
 }
 
 model TransactionDetail {
@@ -251,7 +277,9 @@ model TransactionDetail {
   transactionId String? // Optional - null for guest service payments
 
   // Số tiền phân bổ cho khoản mục này
-  amount Decimal @db.Decimal(10, 2)
+  baseAmount     Decimal @db.Decimal(10, 2)
+  discountAmount Decimal @db.Decimal(10, 2)
+  amount         Decimal @db.Decimal(10, 2)
 
   // Liên kết tới cái cần thanh toán (Một trong hai cái này sẽ có giá trị)
   bookingRoomId  String? // Nếu thanh toán tiền phòng
@@ -261,7 +289,9 @@ model TransactionDetail {
   bookingRoom  BookingRoom?  @relation(fields: [bookingRoomId], references: [id])
   serviceUsage ServiceUsage? @relation(fields: [serviceUsageId], references: [id])
 
-  createdAt DateTime @default(now())
+  createdAt          DateTime            @default(now())
+  customerPromotions CustomerPromotion[]
+  usedPromotions     UsedPromotion[]
 }
 
 model Service {
@@ -320,6 +350,72 @@ model Activity {
   bookingRoom  BookingRoom?  @relation(fields: [bookingRoomId], references: [id])
   customer     Customer?     @relation(fields: [customerId], references: [id])
   employee     Employee?     @relation(fields: [employeeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Promotion {
+  id          String  @id @default(cuid())
+  code        String  @unique
+  description String?
+
+  type        PromotionType
+  scope       PromotionScope @default(ALL)
+  value       Decimal        @db.Decimal(10, 2)
+  maxDiscount Decimal?       @db.Decimal(10, 2)
+
+  minBookingAmount Decimal  @default(0) @db.Decimal(10, 2)
+  startDate        DateTime
+  endDate          DateTime
+
+  totalQty     Int? // null = không giới hạn tổng
+  remainingQty Int? // null = không giới hạn tổng
+
+  perCustomerLimit Int @default(1)
+
+  isActive Boolean @default(true)
+
+  customerPromotions CustomerPromotion[]
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  disabledAt DateTime?
+
+  usedPromotions UsedPromotion[]
+}
+
+model CustomerPromotion {
+  id          String                  @id @default(cuid())
+  customerId  String
+  promotionId String
+  status      CustomerPromotionStatus @default(AVAILABLE)
+
+  claimedAt DateTime  @default(now())
+  usedAt    DateTime?
+
+  customer  Customer  @relation(fields: [customerId], references: [id])
+  promotion Promotion @relation(fields: [promotionId], references: [id])
+
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  transactionDetail   TransactionDetail? @relation(fields: [transactionDetailId], references: [id])
+  transactionDetailId String?
+}
+
+model UsedPromotion {
+  id          String @id @default(cuid())
+  promotionId String
+
+  discountAmount Decimal @db.Decimal(10, 2)
+
+  transactionDetailId String
+  transactionId       String?
+
+  transactionDetail TransactionDetail @relation(fields: [transactionDetailId], references: [id])
+  transaction       Transaction?      @relation(fields: [transactionId], references: [id])
+
+  promotion Promotion @relation(fields: [promotionId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

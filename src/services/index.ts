@@ -8,8 +8,9 @@ export { RoomTypeService } from './roomType.service';
 export { RoomService } from './room.service';
 export { ServiceService } from './service.service';
 export { UsageServiceService } from './usage-service.service';
-export { TransactionService } from './transaction.service';
+export { TransactionService } from './transaction';
 export { ActivityService } from './activity.service';
+export { PromotionService } from './promotion.service';
 
 // Re-export getters from bootstrap for convenience
 export {} from 'core/bootstrap';
