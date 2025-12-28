@@ -10,6 +10,8 @@ import customerManagementRoute from './customerManagement.route';
 import usageServiceRoute from './usage-service.route';
 import transactionRoute from './transaction.route';
 import promotionRoute from './promotion.route';
+import activityRoute from './activity.route';
+import roomTagRoute from './roomTag.route';
 
 const employeeRoute = express.Router();
 
@@ -24,5 +26,7 @@ employeeRoute.use('/customers', customerManagementRoute);
 employeeRoute.use('/service', usageServiceRoute);
 employeeRoute.use('/transactions', transactionRoute);
 employeeRoute.use('/promotions', promotionRoute);
+employeeRoute.use('/activities', activityRoute);
+employeeRoute.use('/room-tags', roomTagRoute);
 
 export default employeeRoute;
