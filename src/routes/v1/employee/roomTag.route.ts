@@ -1,10 +1,10 @@
 import express from 'express';
-import validate from 'middlewares/validate';
-import { roomTagValidation } from 'validations';
-import EmployeeRoomTagController from 'controllers/employee/employee.roomTag.controller';
-import { container, TOKENS } from 'core/container';
-import { RoomTagService } from 'services/roomTag.service';
-import { authEmployee } from 'middlewares/auth';
+import validate from '@/middlewares/validate';
+import { roomTagValidation } from '@/validations';
+import EmployeeRoomTagController from '@/controllers/employee/employee.roomTag.controller';
+import { container, TOKENS } from '@/core/container';
+import { RoomTagService } from '@/services/roomTag.service';
+import { authEmployee } from '@/middlewares/auth';
 
 const router = express.Router();
 

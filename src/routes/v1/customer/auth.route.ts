@@ -1,9 +1,9 @@
 import express from 'express';
-import validate from 'middlewares/validate';
-import { customerValidation, authValidation } from 'validations';
-import CustomerController from 'controllers/customer/customer.controller';
-import { container, TOKENS } from 'core/container';
-import { AuthService, CustomerService, TokenService } from 'services';
+import validate from '@/middlewares/validate';
+import { customerValidation, authValidation } from '@/validations';
+import CustomerController from '@/controllers/customer/customer.controller';
+import { container, TOKENS } from '@/core/container';
+import { AuthService, CustomerService, TokenService } from '@/services';
 
 const router = express.Router();
 

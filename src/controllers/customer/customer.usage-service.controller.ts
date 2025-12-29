@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../types/express.d.ts" />
-import { Injectable } from 'core/decorators';
-import catchAsync from 'utils/catchAsync';
-import { UsageServiceService } from 'services/usage-service.service';
+import { Injectable } from '@/core/decorators';
+import catchAsync from '@/utils/catchAsync';
+import { UsageServiceService } from '@/services/usage-service.service';
 
 @Injectable()
 export class CustomerUsageServiceController {

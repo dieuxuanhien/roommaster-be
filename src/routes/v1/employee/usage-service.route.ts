@@ -1,10 +1,10 @@
 import express from 'express';
-import validate from 'middlewares/validate';
-import { usageServiceValidation } from 'validations';
-import EmployeeUsageServiceController from 'controllers/employee/employee.usage-service.controller';
-import { container, TOKENS } from 'core/container';
-import { UsageServiceService } from 'services/usage-service.service';
-import { authEmployee } from 'middlewares/auth';
+import validate from '@/middlewares/validate';
+import { usageServiceValidation } from '@/validations';
+import EmployeeUsageServiceController from '@/controllers/employee/employee.usage-service.controller';
+import { container, TOKENS } from '@/core/container';
+import { UsageServiceService } from '@/services/usage-service.service';
+import { authEmployee } from '@/middlewares/auth';
 
 const router = express.Router();
 

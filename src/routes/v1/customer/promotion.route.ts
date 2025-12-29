@@ -1,10 +1,10 @@
 import express from 'express';
-import validate from 'middlewares/validate';
-import { promotionValidation, commonValidation } from 'validations';
-import CustomerPromotionController from 'controllers/customer/customer.promotion.controller';
-import { container, TOKENS } from 'core/container';
-import { PromotionService } from 'services/promotion.service';
-import { authCustomer } from 'middlewares/auth';
+import validate from '@/middlewares/validate';
+import { promotionValidation, commonValidation } from '@/validations';
+import CustomerPromotionController from '@/controllers/customer/customer.promotion.controller';
+import { container, TOKENS } from '@/core/container';
+import { PromotionService } from '@/services/promotion.service';
+import { authCustomer } from '@/middlewares/auth';
 
 const router = express.Router();
 

@@ -1,10 +1,10 @@
 import express from 'express';
-import { authEmployee } from 'middlewares/auth';
-import validate from 'middlewares/validate';
-import { roomValidation } from 'validations';
-import { container, TOKENS } from 'core/container';
-import { RoomService } from 'services';
-import { RoomController } from 'controllers/employee/employee.room.controller';
+import { authEmployee } from '@/middlewares/auth';
+import validate from '@/middlewares/validate';
+import { roomValidation } from '@/validations';
+import { container, TOKENS } from '@/core/container';
+import { RoomService } from '@/services';
+import { RoomController } from '@/controllers/employee/employee.room.controller';
 
 const roomRoute = express.Router();
 

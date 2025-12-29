@@ -1,10 +1,10 @@
 import express from 'express';
-import { authEmployee } from 'middlewares/auth';
-import validate from 'middlewares/validate';
-import { employeeValidation } from 'validations';
-import { container, TOKENS } from 'core/container';
-import { EmployeeService } from 'services';
-import { EmployeeManagementController } from 'controllers/employee/employee.employeeManagement.controller';
+import { authEmployee } from '@/middlewares/auth';
+import validate from '@/middlewares/validate';
+import { employeeValidation } from '@/validations';
+import { container, TOKENS } from '@/core/container';
+import { EmployeeService } from '@/services';
+import { EmployeeManagementController } from '@/controllers/employee/employee.employeeManagement.controller';
 
 const employeeManagementRoute = express.Router();
 

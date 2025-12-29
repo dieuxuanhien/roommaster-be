@@ -1,11 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../types/express.d.ts" />
-import { Injectable } from 'core/decorators';
+import { Injectable } from '@/core/decorators';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
-import catchAsync from 'utils/catchAsync';
-import { BookingService } from 'services/booking.service';
-import { sendData } from 'utils/responseWrapper';
+import catchAsync from '@/utils/catchAsync';
+import { BookingService } from '@/services/booking.service';
+import { sendData } from '@/utils/responseWrapper';
 
 @Injectable()
 export class CustomerBookingController {

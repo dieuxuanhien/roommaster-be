@@ -1,10 +1,10 @@
 import express from 'express';
-import validate from 'middlewares/validate';
-import { bookingValidation } from 'validations';
-import EmployeeBookingController from 'controllers/employee/employee.booking.controller';
-import { container, TOKENS } from 'core/container';
-import { BookingService } from 'services/booking.service';
-import { authEmployee } from 'middlewares/auth';
+import validate from '@/middlewares/validate';
+import { bookingValidation } from '@/validations';
+import EmployeeBookingController from '@/controllers/employee/employee.booking.controller';
+import { container, TOKENS } from '@/core/container';
+import { BookingService } from '@/services/booking.service';
+import { authEmployee } from '@/middlewares/auth';
 
 const router = express.Router();
 

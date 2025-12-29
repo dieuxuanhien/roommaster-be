@@ -1,9 +1,9 @@
-import { Injectable } from 'core/decorators';
+import { Injectable } from '@/core/decorators';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
-import catchAsync from 'utils/catchAsync';
-import { RoomService } from 'services/room.service';
-import { sendData } from 'utils/responseWrapper';
+import catchAsync from '@/utils/catchAsync';
+import { RoomService } from '@/services/room.service';
+import { sendData } from '@/utils/responseWrapper';
 import { RoomStatus } from '@prisma/client';
 
 @Injectable()

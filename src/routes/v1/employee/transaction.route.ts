@@ -1,10 +1,10 @@
 import express from 'express';
-import validate from 'middlewares/validate';
-import { transactionValidation } from 'validations';
-import EmployeeTransactionController from 'controllers/employee/employee.transaction.controller';
-import { container, TOKENS } from 'core/container';
-import { TransactionService } from 'services/transaction';
-import { authEmployee } from 'middlewares/auth';
+import validate from '@/middlewares/validate';
+import { transactionValidation } from '@/validations';
+import EmployeeTransactionController from '@/controllers/employee/employee.transaction.controller';
+import { container, TOKENS } from '@/core/container';
+import { TransactionService } from '@/services/transaction';
+import { authEmployee } from '@/middlewares/auth';
 
 const router = express.Router();
 

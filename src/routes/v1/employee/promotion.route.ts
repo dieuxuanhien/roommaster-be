@@ -1,10 +1,10 @@
 import express from 'express';
-import validate from 'middlewares/validate';
-import { promotionValidation, commonValidation } from 'validations';
-import EmployeePromotionController from 'controllers/employee/employee.promotion.controller';
-import { container, TOKENS } from 'core/container';
-import { PromotionService } from 'services/promotion.service';
-import { authEmployee } from 'middlewares/auth';
+import validate from '@/middlewares/validate';
+import { promotionValidation, commonValidation } from '@/validations';
+import EmployeePromotionController from '@/controllers/employee/employee.promotion.controller';
+import { container, TOKENS } from '@/core/container';
+import { PromotionService } from '@/services/promotion.service';
+import { authEmployee } from '@/middlewares/auth';
 
 const router = express.Router();
 
