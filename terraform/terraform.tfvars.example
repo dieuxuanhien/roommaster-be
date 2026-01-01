@@ -1,0 +1,45 @@
+# terraform/terraform.tfvars.example
+# Example Terraform variables file for manual deployments
+# Copy this file to terraform.tfvars and fill in your actual values
+# IMPORTANT: Never commit terraform.tfvars to git (it's in .gitignore)
+
+# Azure Resource Configuration
+resource_group_name    = "roommaster-rg"
+location              = "Southeast Asia"  # Change to your preferred region
+app_service_name      = "roommaster-backend"  # Must be globally unique
+app_service_plan_name = "roommaster-plan"
+node_version          = "20-lts"
+
+# Application Configuration
+port     = 3000
+node_env = "production"
+
+# Database Configuration (SENSITIVE - Do not commit)
+database_url = "postgresql://username:password@host:5432/database?sslmode=require"
+
+# JWT Configuration (SENSITIVE - Do not commit)
+jwt_secret                            = "your-secret-key-here-change-this-in-production"
+jwt_access_expiration_minutes         = 30
+jwt_refresh_expiration_days           = 30
+jwt_reset_password_expiration_minutes = 10
+jwt_verify_email_expiration_minutes   = 10
+
+# SMTP Configuration (for email service)
+# For testing, you can use a fake SMTP service like Ethereal: https://ethereal.email/create
+smtp_host     = "email-server.example.com"
+smtp_port     = 587
+smtp_username = "email-server-username"  # SENSITIVE
+smtp_password = "email-server-password"  # SENSITIVE
+email_from    = "support@yourapp.com"
+
+# Swagger API Documentation Configuration (SENSITIVE)
+swagger_username = "admin"
+swagger_password = "change-this-secure-password"  # Change in production!
+
+# Optional: Resource Tags
+tags = {
+  Environment = "Development"
+  Project     = "RoomMaster"
+  ManagedBy   = "Terraform"
+  Owner       = "Your Name"
+}
