@@ -25,10 +25,10 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
-      
+          yarn install
+          yarn run build --if-present
+          yarn run test --if-present
+          yarn prisma db migrate deploy
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -62,4 +62,5 @@ jobs:
           app-name: 'roommaster-be'
           slot-name: 'Production'
           package: .
+
           
