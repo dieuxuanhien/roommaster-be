@@ -24,10 +24,14 @@ jobs:
           node-version: '20.x'
 
       - name: npm install, build, and test
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+          
+      - name: npm build
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -52,4 +56,5 @@ jobs:
           app-name: 'roommaster-backend'
           slot-name: 'Production'
           package: .
+
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3CAC2105623F4A1A87D66297DC110945 }}
