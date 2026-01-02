@@ -49,11 +49,34 @@ jobs:
           # Copy node_modules with Prisma client
           cp -r node_modules deploy/
           
-          # Copy Prisma schema (needed for migrations)
+          # Copy the generated Prisma client explicitly
+          mkdir -p deploy/.prisma
+          cp -r node_modules/.prisma/client deploy/.prisma/ || true
+          
+          # Copy Prisma schema (needed for runtime)
           cp -r prisma deploy/
           
-          # Copy package.json
+          # Copy package.json and yarn.lock
           cp package.json deploy/
+          cp yarn.lock deploy/
+          
+          # Create startup script that ensures Prisma client exists
+          cat > deploy/startup.sh << 'EOF'
+          #!/bin/bash
+          set -e
+          echo "Starting application..."
+          echo "Checking Prisma client..."
+
+          # Ensure Prisma client is generated (handles Azure's node_modules structure)
+          if [ ! -d "node_modules/.prisma/client" ] && [ ! -d "/node_modules/.prisma/client" ]; then
+            echo "Generating Prisma client..."
+            npx prisma generate || true
+          fi
+
+          # Start the application
+          node build/index.js
+          EOF
+          chmod +x deploy/startup.sh
           
           # Create .deployment file to disable Oryx build
           echo '[config]' > deploy/.deployment
@@ -82,7 +105,22 @@ jobs:
           app-name: 'roommaster-backend'
           slot-name: 'Production'
           package: .
-
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3CAC2105623F4A1A87D66297DC110945 }}
+      
+      - name: 'Set Azure Startup Command'
+        uses: azure/appservice-settings@v1
+        with:
+          app-name: 'roommaster-backend'
+          slot-name: 'Production'
+          app-settings-json: |
+            [
+              {
+                "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+                "value": "false",
+                "slotSetting": false
+              }
+            ]
+          startup-command: "bash startup.sh"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3CAC2105623F4A1A87D66297DC110945 }}
 
 
