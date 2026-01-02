@@ -4,6 +4,7 @@
   "description": "REST API Boilerplate with Node JS, TypeScript, Express and Prisma",
   "repository": "https://github.com/antonio-lazaro/prisma-express-typescript-boilerplate.git",
   "scripts": {
+    "prestart": "yarn prisma generate",
     "start": "node build/index.js",
     "dev": "cross-env NODE_ENV=development nodemon --exec \"node -r ts-node/register -r tsconfig-paths/register\" src/index.ts",
     "prebuild": "yarn prisma generate",
