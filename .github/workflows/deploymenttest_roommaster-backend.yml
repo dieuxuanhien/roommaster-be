@@ -33,60 +33,23 @@ jobs:
         run: yarn run build
 
       - name: Prepare deployment package
-        run: |          
-          # Install production dependencies only
-          yarn install --production --frozen-lockfile
-          
-          # Generate Prisma client in production node_modules
-          npx prisma generate
-          
-          # Create deployment directory structure
-          mkdir -p deploy
-          
-          # Copy build output
-          cp -r build/* deploy/
-          
-          # Copy node_modules with Prisma client
-          cp -r node_modules deploy/
-          
-          # Copy the generated Prisma client explicitly
-          mkdir -p deploy/.prisma
-          cp -r node_modules/.prisma/client deploy/.prisma/ || true
-          
-          # Copy Prisma schema (needed for runtime)
-          cp -r prisma deploy/
-          
-          # Copy package.json and yarn.lock
-          cp package.json deploy/
-          cp yarn.lock deploy/
-          
-          # Create startup script that ensures Prisma client exists
-          cat > deploy/startup.sh << 'EOF'
-          #!/bin/bash
-          set -e
-          echo "Starting application..."
-          echo "Checking Prisma client..."
-
-          # Ensure Prisma client is generated (handles Azure's node_modules structure)
-          if [ ! -d "node_modules/.prisma/client" ] && [ ! -d "/node_modules/.prisma/client" ]; then
-            echo "Generating Prisma client..."
-            npx prisma generate || true
-          fi
-
-          # Start the application
-          node build/index.js
-          EOF
-          chmod +x deploy/startup.sh
-          
-          # Create .deployment file to disable Oryx build
-          echo '[config]' > deploy/.deployment
-          echo 'SCM_DO_BUILD_DURING_DEPLOYMENT=false' >> deploy/.deployment
+        run: |
+          # Copy Prisma schema and generated client to build folder for production
+          mkdir -p build/node_modules/.prisma
+          mkdir -p build/node_modules/@prisma
+          cp -r node_modules/.prisma/client build/node_modules/.prisma/
+          cp -r node_modules/@prisma/client build/node_modules/@prisma/
+          cp -r prisma build/
         
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: deploy/
+          path: |
+            build/
+            package.json
+            yarn.lock
+            prisma/
 
   deploy:
     runs-on: ubuntu-latest
@@ -106,6 +69,5 @@ jobs:
           slot-name: 'Production'
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3CAC2105623F4A1A87D66297DC110945 }}
-          startup-command: 'bash startup.sh'
 
 
