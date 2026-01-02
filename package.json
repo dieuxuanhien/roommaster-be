@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node build/index.js",
     "dev": "cross-env NODE_ENV=development nodemon --exec \"node -r ts-node/register -r tsconfig-paths/register\" src/index.ts",
-    "prebuild" : "npx prisma generate",
+    "prebuild": "yarn prisma generate",
     "build": "tsc -p tsconfig.json && tsc-alias",
     "test": "docker compose -f docker-compose.only-db-test.yml up -d && yarn db:push && jest -i --colors --verbose --detectOpenHandles && docker-compose -f docker-compose.only-db-test.yml down",
     "test:watch": "docker compose -f docker-compose.only-db-test.yml up -d && yarn db:push && jest -i --watchAll && docker-compose -f docker-compose.only-db-test.yml down",
@@ -22,7 +22,7 @@
     "docker:test": "docker compose -f docker-compose.yml -f docker-compose.test.yml up",
     "docker:dev-db:start": "docker compose -f docker-compose.only-db-dev.yml up -d",
     "docker:dev-db:stop": "docker compose -f docker-compose.only-db-dev.yml down",
-    "postinstall": "npx prisma generate",
+    "postinstall": "yarn prisma generate",
     "prepare": "husky install",
     "generate:swagger": "node scripts/generate-swagger.js"
   },
