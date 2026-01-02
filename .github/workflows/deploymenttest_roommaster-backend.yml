@@ -28,7 +28,7 @@ jobs:
         with:
           cmd: install
           
-      - name: npm build
+      - name: yarn build
         uses: borales/actions-yarn@v4
         with:
           cmd: build
@@ -58,3 +58,4 @@ jobs:
           package: .
 
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3CAC2105623F4A1A87D66297DC110945 }}
+
