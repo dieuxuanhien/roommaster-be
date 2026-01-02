@@ -106,21 +106,6 @@ jobs:
           slot-name: 'Production'
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3CAC2105623F4A1A87D66297DC110945 }}
-      
-      - name: 'Set Azure Startup Command'
-        uses: azure/appservice-settings@v1
-        with:
-          app-name: 'roommaster-backend'
-          slot-name: 'Production'
-          app-settings-json: |
-            [
-              {
-                "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
-                "value": "false",
-                "slotSetting": false
-              }
-            ]
-          startup-command: "bash startup.sh"
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3CAC2105623F4A1A87D66297DC110945 }}
+          startup-command: 'bash startup.sh'
 
 
