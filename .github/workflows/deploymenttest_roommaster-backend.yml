@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -30,11 +30,16 @@ jobs:
       - name: Build application
         run: yarn run build
 
-      - name: Remove dev dependencies
-        run: yarn install --production --ignore-scripts --prefer-offline
+      - name: Re-install only production dependencies
+        run: |
+          rm -rf node_modules
+          yarn install --production --frozen-lockfile --ignore-scripts --prefer-offline
 
       - name: Generate Prisma Client
         run: yarn prisma generate
+
+      - name: Install Zip
+        run: sudo apt-get install -y zip
 
       - name: Zip artifact for deployment
         run: zip -r release.zip . -x "*.git*" "src/*" "tests/*" "scripts/*" "docs/*" ".github/*" "docker-compose*" "terraform/*"
@@ -44,6 +49,7 @@ jobs:
         with:
           name: node-app
           path: release.zip
+          if-no-files-found: error
 
   deploy:
     runs-on: ubuntu-latest
@@ -55,6 +61,9 @@ jobs:
         with:
           name: node-app
       
+      - name: Verify artifact
+        run: ls -la release.zip
+
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
