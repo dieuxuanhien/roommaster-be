@@ -33,31 +33,18 @@ jobs:
         run: yarn run build
 
       - name: Prepare deployment package
-        run: |          
-          # Install production dependencies only
-          yarn install --production --frozen-lockfile
-          
-          # Generate Prisma client in production node_modules
-          npx prisma generate
-          
-          # Create deployment directory structure
+        run: |
+          # Create deployment directory
           mkdir -p deploy
           
           # Copy build output
-          cp -r build/* deploy/
+          cp -r build deploy/
           
-          # Copy node_modules with Prisma client
-          cp -r node_modules deploy/
-          
-          # Copy Prisma schema (needed for migrations)
+          # Copy Prisma schema
           cp -r prisma deploy/
           
-          # Copy package.json
-          cp package.json deploy/
-          
-          # Create .deployment file to disable Oryx build
-          echo '[config]' > deploy/.deployment
-          echo 'SCM_DO_BUILD_DURING_DEPLOYMENT=false' >> deploy/.deployment
+          # Copy package files (Oryx will use these to install deps)
+          cp package.json yarn.lock deploy/
         
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
