@@ -22,34 +22,28 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
+          cache: 'yarn'
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Generate Prisma Client
-        run: yarn prisma generate
-          
       - name: Build application
         run: yarn run build
 
-      - name: Prepare deployment package
-        run: |
-          # Copy Prisma schema and generated client to build folder for production
-          mkdir -p build/node_modules/.prisma
-          mkdir -p build/node_modules/@prisma
-          cp -r node_modules/.prisma/client build/node_modules/.prisma/
-          cp -r node_modules/@prisma/client build/node_modules/@prisma/
-          cp -r prisma build/
-        
+      - name: Remove dev dependencies
+        run: yarn install --production --ignore-scripts --prefer-offline
+
+      - name: Generate Prisma Client
+        run: yarn prisma generate
+
+      - name: Zip artifact for deployment
+        run: zip -r release.zip . -x "*.git*" "src/*" "tests/*" "scripts/*" "docs/*" ".github/*" "docker-compose*" "terraform/*"
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: |
-            build/
-            package.json
-            yarn.lock
-            prisma/
+          path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -67,7 +61,7 @@ jobs:
         with:
           app-name: 'roommaster-backend'
           slot-name: 'Production'
-          package: .
+          package: release.zip
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3CAC2105623F4A1A87D66297DC110945 }}
-
-
+          # Ensure you set the Startup Command in Azure Portal -> Configuration -> General Settings:
+          # npx prisma migrate deploy && node build/index.js
